@@ -4,25 +4,25 @@
 @tailwind utilities;
 
 :root {
-	--background: 0 0% 100%;
-	--foreground: 240 10% 3.9%;
-	--card: 0 0% 100%;
-	--card-foreground: 240 10% 3.9%;
-	--popover: 0 0% 100%;
-	--popover-foreground: 240 10% 3.9%;
-	--primary: 142.1 76.2% 36.3%;
-	--primary-foreground: 355.7 100% 97.3%;
-	--secondary: 240 4.8% 95.9%;
-	--secondary-foreground: 240 5.9% 10%;
-	--muted: 240 4.8% 95.9%;
-	--muted-foreground: 240 3.8% 46.1%;
-	--accent: 240 4.8% 95.9%;
-	--accent-foreground: 240 5.9% 10%;
-	--destructive: 0 84.2% 60.2%;
-	--destructive-foreground: 0 0% 98%;
-	--border: 240 5.9% 90%;
-	--input: 240 5.9% 90%;
-	--ring: 142.1 76.2% 36.3%;
+	--background: 210 10% 98%; /* um tom suave de branco com um toque frio */
+	--foreground: 210 15% 10%; /* um cinza escuro para boa legibilidade */
+	--card: 210 10% 98%; /* cor consistente com o fundo */
+	--card-foreground: 210 15% 10%; /* semelhante ao foreground principal */
+	--popover: 210 10% 96%; /* um leve contraste com o fundo */
+	--popover-foreground: 210 15% 10%; /* leitura clara no popover */
+	--primary: 190 70% 40%; /* um tom calmo e confiável de azul esverdeado */
+	--primary-foreground: 0 0% 100%; /* branco para contraste no botão primário */
+	--secondary: 210 25% 90%; /* um tom sutil de azul claro */
+	--secondary-foreground: 210 20% 15%; /* cinza escuro suave */
+	--muted: 210 20% 95%; /* cinza claro neutro */
+	--muted-foreground: 210 15% 40%; /* cinza médio para visibilidade */
+	--accent: 150 50% 40%; /* um verde reconfortante para destaques */
+	--accent-foreground: 0 0% 100%; /* branco para contraste */
+	--destructive: 0 65% 50%; /* um vermelho moderado, menos agressivo */
+	--destructive-foreground: 0 0% 100%; /* branco para contraste */
+	--border: 210 20% 85%; /* um cinza azul frio */
+	--input: 210 20% 85%; /* consistente com a cor da borda */
+	--ring: 190 70% 40%; /* azul esverdeado para um foco agradável */
 	--radius: 0.5rem;
 	--font-montserrat: "Montserrat";
 	--font-poppins: "Poppins";
@@ -32,6 +32,57 @@
 	* {
 		@apply border-border font-montserrat;
 	}
+}
+
+.fade-in {
+	animation: fadein ease-in-out 0.5s;
+}
+
+@keyframes fadein {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+.f1,
+.f2,
+.f3,
+.f4,
+.f5,
+.f6 {
+	@apply tracking-wide font-poppins text-accent;
+}
+
+.f1 {
+	@apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold;
+}
+
+.f2 {
+	@apply text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold;
+}
+
+.f3 {
+	@apply text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-normal;
+}
+
+.f4 {
+	@apply text-xl md:text-2xl lg:text-3xl xl:text-4xl font-normal;
+}
+
+.f5 {
+	@apply text-lg md:text-xl lg:text-2xl xl:text-3xl font-normal;
+}
+
+.f6 {
+	@apply text-base md:text-lg lg:text-xl xl:text-2xl font-normal;
+}
+
+.first-uppercase::first-letter {
+	@apply uppercase;
 }
 
 input,

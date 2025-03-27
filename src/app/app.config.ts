@@ -1,4 +1,4 @@
-import { ApplicationConfig, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import {
 	InMemoryScrollingFeature,
 	InMemoryScrollingOptions,
@@ -15,6 +15,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
 import { httpInterceptorProviders } from './auth/interceptors';
+import { NgxWebstorageModule } from 'ngx-webstorage';
 registerLocaleData(ptBr);
 
 const scrollConfig: InMemoryScrollingOptions = {
@@ -31,6 +32,12 @@ export const appConfig: ApplicationConfig = {
 		provideClientHydration(),
 		provideHttpClient(withFetch(), withInterceptors(httpInterceptorProviders)),
 		{ provide: LOCALE_ID, useValue: 'pt-BR' },
-		{ provide: TitleStrategy, useClass: CustomTitleStrategy }
+		{ provide: TitleStrategy, useClass: CustomTitleStrategy },
+		importProvidersFrom([
+			NgxWebstorageModule.forRoot({
+				prefix: 'saude-app',
+				separator: '-'
+			})
+		])
 	]
 };

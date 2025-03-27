@@ -107,4 +107,26 @@ export class FormUtils {
 	static getControl(form: FormGroup, name: string): AbstractControl {
 		return form.controls[name];
 	}
+
+	static listFormErrors(form: FormGroup): { field: string; errors: string[] }[] {
+		const errorArray: { field: string; errors: string[] }[] = [];
+		Object.keys(form.controls).forEach((key) => {
+			const control = form.get(key);
+			if (control && control.errors) {
+				const fieldErrors: string[] = Object.keys(control.errors).map((errorKey) => {
+					switch (errorKey) {
+						case 'required':
+							return 'é obrigatório.';
+						case 'email':
+							return 'inválido.';
+						default:
+							return `Erro: ${errorKey}.`;
+					}
+				});
+				errorArray.push({ field: key, errors: fieldErrors });
+			}
+		});
+
+		return errorArray;
+	}
 }

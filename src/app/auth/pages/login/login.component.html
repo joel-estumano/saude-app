@@ -1,6 +1,6 @@
 <app-container-base>
 	<div class="flex flex-col gap-16">
-		<h2>Login</h2>
+		<h2 class="f2">Login</h2>
 
 		<form class="flex flex-col gap-10" [formGroup]="loginForm" (ngSubmit)="login()">
 			<div class="grid gap-5">
@@ -9,10 +9,9 @@
 						<label for="email">Email</label>
 						<input
 							type="text"
-							[readOnly]=""
 							formControlName="email"
 							placeholder="janedoe@mail.com"
-							[ngClass]="formUtils.invalidClass(formUtils.getControl(loginForm, 'email'), this.isFormSubmited)"
+							[ngClass]="formUtils.invalidClass(formUtils.getControl(loginForm, 'email'), this.isFormSubmited())"
 						/>
 					</div>
 				</div>
@@ -21,16 +20,15 @@
 						<label for="password">Senha</label>
 						<input
 							type="password"
-							[readOnly]=""
 							formControlName="password"
 							placeholder="******"
-							[ngClass]="formUtils.invalidClass(formUtils.getControl(loginForm, 'password'), this.isFormSubmited)"
+							[ngClass]="formUtils.invalidClass(formUtils.getControl(loginForm, 'password'), this.isFormSubmited())"
 						/>
 					</div>
 				</div>
 			</div>
 			<div class="inline-flex justify-center gap-5">
-				<button type="submit" title="Entrar">Entrar</button>
+				<button type="submit" title="Entrar" [disabled]="this.isLoading()">{{ this.isLoading() ? "Enviando" : "Enviar" }}</button>
 			</div>
 		</form>
 	</div>
