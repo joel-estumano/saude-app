@@ -81,12 +81,16 @@
 		</app-container-base>
 	} @else {
 		<app-container-base>
-			<p class="mx-auto">Carregando...</p>
+			<div class="flex flex-col items-center w-full gap-16 sm:items-start">
+				<h2 class="f2">Carregando...</h2>
+			</div>
 		</app-container-base>
 	}
 } @else {
 	<app-container-base>
-		<p class="mx-auto">Ops! :(</p>
-		<button title="Tentar novamente" (click)="reloadData()">Tentar novamente</button>
+		<div class="flex flex-col items-center w-full gap-16 sm:items-start">
+			<h2 class="f2">Ops! :(</h2>
+			<button title="Tentar novamente" (click)="reloadData()">Tentar novamente</button>
+		</div>
 	</app-container-base>
 }
