@@ -1,0 +1,37 @@
+<app-container-base>
+	<div class="flex flex-col gap-16">
+		<h2>Login</h2>
+
+		<form class="flex flex-col gap-10" [formGroup]="loginForm" (ngSubmit)="login()">
+			<div class="grid gap-5">
+				<div class="grid grid-cols-1">
+					<div>
+						<label for="email">Email</label>
+						<input
+							type="text"
+							[readOnly]=""
+							formControlName="email"
+							placeholder="janedoe@mail.com"
+							[ngClass]="formUtils.invalidClass(formUtils.getControl(loginForm, 'email'), this.isFormSubmited)"
+						/>
+					</div>
+				</div>
+				<div class="grid grid-cols-1">
+					<div>
+						<label for="password">Senha</label>
+						<input
+							type="password"
+							[readOnly]=""
+							formControlName="password"
+							placeholder="******"
+							[ngClass]="formUtils.invalidClass(formUtils.getControl(loginForm, 'password'), this.isFormSubmited)"
+						/>
+					</div>
+				</div>
+			</div>
+			<div class="inline-flex justify-center gap-5">
+				<button type="submit" title="Entrar">Entrar</button>
+			</div>
+		</form>
+	</div>
+</app-container-base>

@@ -1,0 +1,77 @@
+@if (regional$ | async; as regional) {
+	<app-container-base>
+		<div class="flex flex-col gap-16">
+			<h2>Criar Entidade</h2>
+
+			<form class="flex flex-col gap-10" [formGroup]="entityForm" (ngSubmit)="save()">
+				<div class="grid gap-5">
+					<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+						<div>
+							<label for="cnpj">CNPJ</label>
+							<input
+								type="text"
+								[readOnly]=""
+								formControlName="cnpj"
+								placeholder="00.000.000/0000-00"
+								[ngClass]="formUtils.invalidClass(formUtils.getControl(entityForm, 'cnpj'), this.isFormSubmited)"
+								mask="00.000.000/0000-00"
+							/>
+						</div>
+						<div>
+							<label for=""> </label>
+							<input type="text" />
+						</div>
+					</div>
+					<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+						<div>
+							<label for="razao_social">Razao Social</label>
+							<input
+								type="text"
+								[readOnly]=""
+								formControlName="razao_social"
+								placeholder="Ex.: Razao Social S/A"
+								[ngClass]="formUtils.invalidClass(formUtils.getControl(entityForm, 'razao_social'), this.isFormSubmited)"
+							/>
+						</div>
+						<div>
+							<label for="nome_fantasia">Nome Fantasia</label>
+							<input
+								type="text"
+								[readOnly]=""
+								formControlName="nome_fantasia"
+								placeholder="Ex.: Fantasia"
+								[ngClass]="formUtils.invalidClass(formUtils.getControl(entityForm, 'nome_fantasia'), this.isFormSubmited)"
+							/>
+						</div>
+					</div>
+					<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+						<div>
+							<label for="data_inauguracao">Data de Inauguração</label>
+							<input
+								type="text"
+								[readOnly]=""
+								formControlName="data_inauguracao"
+								placeholder=""
+								[ngClass]="formUtils.invalidClass(formUtils.getControl(entityForm, 'data_inauguracao'), this.isFormSubmited)"
+							/>
+						</div>
+						<div>
+							<label for=""> </label>
+							<input type="text" />
+						</div>
+						<div>
+							<label for=""> </label>
+							<input type="text" />
+						</div>
+					</div>
+				</div>
+				<div class="inline-flex justify-end gap-5">
+					<button title="Cancelar" (click)="cancel()">Cancelar</button>
+					<button title="Salvar" type="submit">Salvar</button>
+				</div>
+			</form>
+		</div>
+	</app-container-base>
+} @else {
+	<p>Carregando...</p>
+}
