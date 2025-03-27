@@ -51,7 +51,7 @@ export class LoginComponent {
 				client_id: environment.clientId,
 				client_secret: environment.clientSecret,
 				grant_type: 'password',
-				username: this.loginForm.controls['email'].value,
+				username: this.loginForm.controls['email'].value.trim(),
 				password: this.loginForm.controls['password'].value,
 				scope: ''
 			};
@@ -97,7 +97,7 @@ export class LoginComponent {
 		});
 		// Itera sobre os erros encontrados e exibe mensagens de alerta
 		erros.forEach((element) => {
-			this.alertService.add('error', `${element.field} ${element.errors.toString()}`);
+			this.alertService.add('error', `${element.field} ${element.errors.join(', ')}.`);
 		});
 	}
 

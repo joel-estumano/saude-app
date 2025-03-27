@@ -89,6 +89,38 @@ export class FormUtils {
 	}
 
 	/**
+	 * @description
+	 * Validador que verifica se um controle do tipo `<select>` não tem a opção padrão selecionada.
+	 *
+	 * @usageNotes
+	 *
+	 * ### Validar que o campo de seleção tem uma opção válida
+	 *
+	 * ```ts
+	 * const control = new FormControl('', CustomValidators.noSelect('defaultOption'));
+	 *
+	 * console.log(control.errors); // { noSelection: true } se a opção padrão foi selecionada
+	 * ```
+	 *
+	 * @param invalidOption Valor inválido que representa a opção não selecionada (ex.: 'defaultOption').
+	 * @returns Um mapa de erros com a propriedade `noSelection`
+	 * se a validação falhar, caso contrário `null`.
+	 */
+
+	static noSelect(invalidOption: string | null = '') {
+		return (control: AbstractControl): ValidationErrors | null => {
+			const value = control.value;
+
+			// Verifica se o valor é igual à opção inválida
+			if (value === invalidOption || value === null || value === undefined) {
+				return { noSelection: true };
+			}
+
+			return null; // Tudo está válido
+		};
+	}
+
+	/**
 	 * Obtém um controle do formulário.
 	 *
 	 * @param form O grupo de formulários do qual obter o controle.
@@ -116,11 +148,15 @@ export class FormUtils {
 				const fieldErrors: string[] = Object.keys(control.errors).map((errorKey) => {
 					switch (errorKey) {
 						case 'required':
-							return 'é obrigatório.';
+							return 'é obrigatório';
 						case 'email':
-							return 'inválido.';
+							return 'é inválido';
+						case 'empty':
+							return 'está vazio';
+						case 'noSelection':
+							return 'não foi selecionado';
 						default:
-							return `Erro: ${errorKey}.`;
+							return 'é inválido';
 					}
 				});
 				errorArray.push({ field: key, errors: fieldErrors });
