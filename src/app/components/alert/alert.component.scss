@@ -1,0 +1,15 @@
+.alert {
+	@apply relative flex text-sm text-accent p-3 min-h-12 min-w-80 w-80 max-w-80 overflow-hidden rounded;
+}
+
+.alert.alert-erro {
+	@apply bg-destructive;
+}
+
+.alert.alert-info {
+	@apply bg-background;
+}
+
+.btn-x-close {
+	@apply absolute top-1 right-1 flex justify-center items-center pt-2.5 bg-white text-background w-4 h-4 text-xs p-1 rounded-full;
+}
