@@ -38,7 +38,7 @@ export class EntityAddComponent implements OnDestroy {
 			cnpj: new FormControl('', [Validators.required, FormUtils.notEmpty]),
 			regional_id: new FormControl('', [Validators.required, FormUtils.noSelect('')]),
 			data_inauguracao: new FormControl('', [Validators.required, FormUtils.notEmpty]),
-			ativa: new FormControl('')
+			ativa: new FormControl(false)
 		});
 
 		this.regional$ = this.reloadTrigger$.pipe(
@@ -74,6 +74,8 @@ export class EntityAddComponent implements OnDestroy {
 			console.log('form: ', this.entityForm.getRawValue());
 		} else {
 			this.invalidFormFeedback(); // Exibe mensagem de erro caso o formulário seja inválido
+
+			console.log(this.entityForm.getRawValue());
 		}
 	}
 

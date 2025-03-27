@@ -85,6 +85,10 @@
 	@apply uppercase;
 }
 
+label {
+	@apply flex justify-start text-sm mb-1 ms-1 text-accent font-semibold;
+}
+
 /* Classe padrão input e textarea */
 input,
 textarea {
@@ -105,4 +109,17 @@ select {
 /* Classe para estados inválidos do select */
 select.is-invalid {
 	@apply border border-destructive focus:outline-none focus:ring-1 focus:ring-destructive focus:border-destructive;
+}
+
+/* Tailwind CSS para o tema personalizado */
+.checkbox {
+	@apply w-5 h-5 rounded-lg outline-none bg-background border px-3 py-2 focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
+}
+
+.checkbox-label {
+	@apply flex items-center gap-2 text-sm cursor-pointer w-fit;
+}
+//.default
+button {
+	@apply w-auto rounded-lg bg-background px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-accent transition-all ease-in-out duration-300 max-sm:duration-0;
 }
