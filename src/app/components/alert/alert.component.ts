@@ -19,7 +19,7 @@ export class AlertComponent implements OnInit {
 		this.alertService.getAlerts().subscribe((alerts) => (this.alerts = alerts));
 	}
 
-	removeAlert(index: number): void {
+	remove(index: number): void {
 		this.alertService.remove(index);
 	}
 }

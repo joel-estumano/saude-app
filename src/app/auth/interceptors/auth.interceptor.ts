@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
 	const authService = inject(AuthService);
-	const token = authService.getToken();
+	const token = authService.getCredentialValue('access_token');
 
 	if (token) {
 		const cloned = req.clone({

@@ -14,7 +14,7 @@ export const errorInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, n
 			if (error.status === 401 || error.status === 403) {
 				authService.logout();
 				router.navigate(['/login']);
-				return throwError(() => new Error('Não autorizado!'));
+				return throwError(() => error);
 			}
 			return throwError(() => error);
 		})

@@ -1,7 +1,8 @@
-<div class="fixed z-[1080] top-4 flex flex-col gap-4 right-4 overflow-y-auto h-screen hide-scrollbar">
+<div class="fixed z-[1080] top-4 flex flex-col gap-4 right-4 overflow-y-auto h-auto max-h-screen hide-scrollbar">
 	@for (alert of alerts; track $index) {
 		<div class="fade-in alert" [ngClass]="alert.type === 'error' ? 'alert-erro' : 'alert-success'">
-			<span>{{ alert.message }}</span>
+			<span class="first-uppercase">{{ alert.message }}</span>
+			<button class="btn-x-close" title="Fechar" (click)="remove($index)">x</button>
 		</div>
 	}
 </div>
