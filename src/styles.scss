@@ -85,12 +85,41 @@
 	@apply uppercase;
 }
 
+label:not(.multi-selector-item) {
+	@apply flex justify-start text-sm mb-1 ms-1 text-accent font-semibold;
+}
+
+/* Classe padrão input e textarea */
 input,
 textarea {
 	@apply w-full rounded-lg outline-none bg-background px-3 py-2 border focus:outline-none focus:ring-1 focus:ring-accent text-sm  transition-all ease-in-out duration-300 max-sm:duration-0;
 }
 
+/* Classe para estados inválidos em input e textarea */
 input.is-invalid,
 textarea.is-invalid {
 	@apply border border-destructive focus:outline-none focus:ring-1 focus:ring-destructive focus:border-destructive;
+}
+
+/* Classe padrão para o select */
+select {
+	@apply w-full rounded-lg outline-none bg-background px-3 py-2 border focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
+}
+
+/* Classe para estados inválidos do select */
+select.is-invalid {
+	@apply border border-destructive focus:outline-none focus:ring-1 focus:ring-destructive focus:border-destructive;
+}
+
+/* Tailwind CSS para o tema personalizado */
+.checkbox {
+	@apply w-5 h-5 accent-accent rounded-lg outline-none bg-background border px-3 py-2 focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
+}
+
+.checkbox-label {
+	@apply flex items-center gap-2 text-sm cursor-pointer w-fit;
+}
+
+button.default {
+	@apply w-auto min-w-24 rounded-lg bg-background px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-accent transition-all ease-in-out duration-300 max-sm:duration-0;
 }

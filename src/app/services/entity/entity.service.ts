@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../http/http.service';
 import { Observable } from 'rxjs';
-import { IRegional } from '@types';
+import { IEntityAddPayload } from '@types';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class RegionalService {
+export class EntityService {
 	constructor(private httpService: HttpService) {}
 
-	list(): Observable<IRegional[]> {
-		return this.httpService.get<IRegional[]>('regionais');
+	add(data: IEntityAddPayload): Observable<IEntityAddPayload> {
+		return this.httpService.post<IEntityAddPayload, IEntityAddPayload>('entidades', data);
 	}
 }

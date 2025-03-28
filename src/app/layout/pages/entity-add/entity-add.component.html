@@ -1,77 +1,33 @@
-@if (regional$ | async; as regional) {
+@if (!this.erro()) {
+	@if (dataCombined$ | async; as data) {
+		<app-container-base>
+			<div class="flex flex-col items-center w-full gap-16 sm:items-start">
+				<h2 class="f2">Criar Entidade</h2>
+				<div class="block w-full">
+					<app-entity-form
+						[entityForm]="entityForm"
+						[regionais]="data.regionais"
+						[especialidades]="data.especialidades"
+						[isLoading]="isLoading()"
+						[isFormSubmited]="isFormSubmited()"
+						(save)="save()"
+						(cancel)="cancel()"
+					></app-entity-form>
+				</div>
+			</div>
+		</app-container-base>
+	} @else {
+		<app-container-base>
+			<div class="flex flex-col items-center w-full gap-16 sm:items-start">
+				<h2 class="f2">Carregando...</h2>
+			</div>
+		</app-container-base>
+	}
+} @else {
 	<app-container-base>
-		<div class="flex flex-col gap-16">
-			<h2>Criar Entidade</h2>
-
-			<form class="flex flex-col gap-10" [formGroup]="entityForm" (ngSubmit)="save()">
-				<div class="grid gap-5">
-					<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-						<div>
-							<label for="cnpj">CNPJ</label>
-							<input
-								type="text"
-								[readOnly]=""
-								formControlName="cnpj"
-								placeholder="00.000.000/0000-00"
-								[ngClass]="formUtils.invalidClass(formUtils.getControl(entityForm, 'cnpj'), this.isFormSubmited)"
-								mask="00.000.000/0000-00"
-							/>
-						</div>
-						<div>
-							<label for=""> </label>
-							<input type="text" />
-						</div>
-					</div>
-					<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-						<div>
-							<label for="razao_social">Razao Social</label>
-							<input
-								type="text"
-								[readOnly]=""
-								formControlName="razao_social"
-								placeholder="Ex.: Razao Social S/A"
-								[ngClass]="formUtils.invalidClass(formUtils.getControl(entityForm, 'razao_social'), this.isFormSubmited)"
-							/>
-						</div>
-						<div>
-							<label for="nome_fantasia">Nome Fantasia</label>
-							<input
-								type="text"
-								[readOnly]=""
-								formControlName="nome_fantasia"
-								placeholder="Ex.: Fantasia"
-								[ngClass]="formUtils.invalidClass(formUtils.getControl(entityForm, 'nome_fantasia'), this.isFormSubmited)"
-							/>
-						</div>
-					</div>
-					<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-						<div>
-							<label for="data_inauguracao">Data de Inauguração</label>
-							<input
-								type="text"
-								[readOnly]=""
-								formControlName="data_inauguracao"
-								placeholder=""
-								[ngClass]="formUtils.invalidClass(formUtils.getControl(entityForm, 'data_inauguracao'), this.isFormSubmited)"
-							/>
-						</div>
-						<div>
-							<label for=""> </label>
-							<input type="text" />
-						</div>
-						<div>
-							<label for=""> </label>
-							<input type="text" />
-						</div>
-					</div>
-				</div>
-				<div class="inline-flex justify-end gap-5">
-					<button title="Cancelar" (click)="cancel()">Cancelar</button>
-					<button title="Salvar" type="submit">Salvar</button>
-				</div>
-			</form>
+		<div class="flex flex-col items-center w-full gap-16 sm:items-start">
+			<h2 class="f2">Ops! :(</h2>
+			<button class="default" title="Tentar novamente" (click)="reloadData()">Tentar novamente</button>
 		</div>
 	</app-container-base>
-} @else {
-	<p>Carregando...</p>
 }

@@ -1,13 +1,13 @@
 .alert {
-	@apply relative flex text-sm text-muted p-3 h-12 shrink-0 min-w-80 w-80 max-w-80 overflow-hidden rounded;
+	@apply relative flex text-sm text-muted p-3 min-h-12 shrink-0 min-w-80 w-80 max-w-80 overflow-hidden rounded;
 }
 
 .alert.alert-erro {
 	@apply bg-destructive;
 }
 
-.alert.alert-info {
-	@apply bg-background;
+.alert.alert-success {
+	@apply bg-accent;
 }
 
 .btn-x-close {

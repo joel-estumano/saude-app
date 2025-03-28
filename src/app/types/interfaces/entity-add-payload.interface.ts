@@ -1,4 +1,4 @@
-export interface IEntityAdd {
+export interface IEntityAddPayload {
 	razao_social: string;
 	nome_fantasia: string;
 	cnpj: string;
