@@ -82,7 +82,7 @@ export class FormUtils {
 
 		// Se encontrar uma tag válida, verifica se o conteúdo interno está vazio
 		if (match && match[2].trim() === '') {
-			return { emptyTagContent: true }; // Conteúdo vazio
+			return { empty: true }; // Conteúdo vazio
 		}
 
 		return null; // Tudo está válido
@@ -121,6 +121,27 @@ export class FormUtils {
 	}
 
 	/**
+	 * Validador estático para verificar o comprimento mínimo de um array.
+	 *
+	 * @param minLength O comprimento mínimo exigido para o array.
+	 * @returns Uma função de validação que retorna um erro caso o comprimento seja menor que `minLength`.
+	 */
+	static arrayMinLength(minLength: number) {
+		return (control: AbstractControl): ValidationErrors | null => {
+			const value = control.value;
+			const valid = Array.isArray(value) && value.length >= minLength;
+
+			// Verifica se o valor é um array e se atende ao comprimento mínimo
+			if (valid) {
+				return null; // Validação bem-sucedida
+			}
+
+			// Retorna o erro com os detalhes do comprimento esperado e atual
+			return { arrayMinLength: true };
+		};
+	}
+
+	/**
 	 * Obtém um controle do formulário.
 	 *
 	 * @param form O grupo de formulários do qual obter o controle.
@@ -140,6 +161,31 @@ export class FormUtils {
 		return form.controls[name];
 	}
 
+	/**
+	 * Formata uma string de data no formato "ddMMyyyy" para "yyyy-MM-dd".
+	 *
+	 * @param dateString A data no formato "ddMMyyyy".
+	 * @returns Uma string formatada no formato "yyyy-MM-dd".
+	 * @throws Erro se a string não for válida.
+	 */
+	static formatDate(dateString: string): string {
+		if (!dateString || dateString.length !== 8) {
+			throw new Error('A data deve estar no formato ddMMyyyy com exatamente 8 caracteres.');
+		}
+
+		const day = dateString.substring(0, 2);
+		const month = dateString.substring(2, 4);
+		const year = dateString.substring(4, 8);
+
+		// Validação básica para garantir valores numéricos
+		if (isNaN(+day) || isNaN(+month) || isNaN(+year)) {
+			throw new Error('A data contém valores inválidos. Certifique-se de que está no formato ddMMyyyy.');
+		}
+
+		// Retorna a data no formato ISO "yyyy-MM-dd"
+		return `${year}-${month}-${day}`;
+	}
+
 	static listFormErrors(form: FormGroup): { field: string; errors: string[] }[] {
 		const errorArray: { field: string; errors: string[] }[] = [];
 		Object.keys(form.controls).forEach((key) => {
@@ -155,6 +201,8 @@ export class FormUtils {
 							return 'está vazio';
 						case 'noSelection':
 							return 'não foi selecionado';
+						case 'arrayMinLength':
+							return 'precisa selecionar items';
 						default:
 							return 'é inválido';
 					}

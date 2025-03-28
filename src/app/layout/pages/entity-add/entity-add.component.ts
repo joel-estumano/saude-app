@@ -10,6 +10,7 @@ import { EntityService } from 'src/app/services/entity/entity.service';
 import { RegionaisService } from 'src/app/services/regionais/regionais.service';
 import { FormUtils } from 'src/app/utils';
 import { EntityFormComponent } from '../../../components/entity-form/entity-form.component';
+import { EspecialidadesService } from 'src/app/services/especialidades/especialidades.service';
 
 @Component({
 	selector: 'app-entity-add',
@@ -27,9 +28,9 @@ export class EntityAddComponent implements OnDestroy {
 	protected regionais$!: Observable<IRegional[]>;
 	protected especialidades$!: Observable<IEspecialidade[]>;
 	protected dataCombined$ = combineLatest([
-		this.regionais$ ?? of([]) // Garantir um fluxo válido se undefined
-		//this.especialidades$ ?? of([]) // Garantir um fluxo válido se undefined
-	]).pipe(map(([regionais]) => ({ regionais })));
+		this.regionais$ ?? of([]), // Garantir um fluxo válido se undefined
+		this.especialidades$ ?? of([]) // Garantir um fluxo válido se undefined
+	]).pipe(map(([regionais, especialidades]) => ({ regionais, especialidades })));
 
 	private reloadTrigger$ = new Subject<void>();
 	protected erro = signal<Error | null>(null);
@@ -38,6 +39,7 @@ export class EntityAddComponent implements OnDestroy {
 		private router: Router,
 		private fb: FormBuilder,
 		private regionalService: RegionaisService,
+		private especialidadesService: EspecialidadesService,
 		private alertService: AlertService,
 		private entityService: EntityService
 	) {
@@ -48,21 +50,8 @@ export class EntityAddComponent implements OnDestroy {
 			regional_id: new FormControl('', [Validators.required, FormUtils.noSelect('')]),
 			data_inauguracao: new FormControl('', [Validators.required, FormUtils.notEmpty]),
 			ativa: new FormControl(false),
-			especialidades: new FormControl()
+			especialidades: new FormControl('', [Validators.required, FormUtils.arrayMinLength(5)])
 		});
-
-		/* this.regional$ = this.reloadTrigger$.pipe(
-			startWith(undefined),
-			switchMap(() =>
-				this.regionalService.list().pipe(
-					catchError((err) => {
-						this.erro.set(err); // Captura o erro
-						this.alertService.add('error', 'Ocorreu um erro ao carregar dados.');
-						return of([]); // Retorna fallback (lista vazia)
-					})
-				)
-			)
-		); */
 
 		this.dataCombined$ = this.reloadTrigger$.pipe(
 			startWith(undefined), // Dispara o carregamento inicial
@@ -74,17 +63,17 @@ export class EntityAddComponent implements OnDestroy {
 							this.alertService.add('error', 'Erro ao carregar regionais.');
 							return of([]); // Retorna fallback vazio
 						})
-					)
-					/* this.especialidadesService.list().pipe(
+					),
+					this.especialidadesService.list().pipe(
 						catchError((err) => {
 							this.erro.set(err); // Captura o erro
 							this.alertService.add('error', 'Erro ao carregar especialidades.');
 							return of([]); // Retorna fallback vazio
 						})
-					) */
+					)
 				])
 			),
-			map(([regionais]) => ({ regionais }))
+			map(([regionais, especialidades]) => ({ regionais, especialidades }))
 		);
 	}
 
@@ -108,14 +97,23 @@ export class EntityAddComponent implements OnDestroy {
 			this.isLoading.set(true);
 
 			// Cria o payload
-			const payload: IEntityAddPayload = this.entityForm.getRawValue();
+			const payload: IEntityAddPayload = {
+				razao_social: this.entityForm.controls['razao_social'].value.trim(),
+				nome_fantasia: this.entityForm.controls['nome_fantasia'].value.trim(),
+				cnpj: this.entityForm.controls['cnpj'].value.trim(),
+				regional_id: this.entityForm.controls['regional_id'].value,
+				data_inauguracao: FormUtils.formatDate(this.entityForm.controls['data_inauguracao'].value),
+				ativa: this.entityForm.controls['ativa'].value,
+				especialidades: this.entityForm.controls['especialidades'].value
+			};
 
 			this.entityService.add(payload).subscribe({
 				next: () => {
+					this.alertService.add('success', 'Operação realizada com sucesso!');
 					this.entityForm.reset();
 				},
 				error: () => {
-					this.alertService.add('error', 'Falha ao adicionar entidade!');
+					this.alertService.add('error', 'Falha em salva entidade!');
 					this.entityForm.enable(); // Reabilita o formulário para edição
 					this.isLoading.set(false);
 					this.isFormSubmited.set(false);
@@ -153,7 +151,6 @@ export class EntityAddComponent implements OnDestroy {
 							return 'Nome Fantasia';
 						case 'data_inauguracao':
 							return 'Data de Inauguração';
-
 						default:
 							return error.field;
 					}

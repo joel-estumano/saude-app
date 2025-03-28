@@ -9,6 +9,7 @@
 					placeholder="00.000.000/0000-00"
 					[ngClass]="formUtils.invalidClass(formUtils.getControl(entityForm(), 'cnpj'), this.isFormSubmited())"
 					mask="00.000.000/0000-00"
+					[dropSpecialCharacters]="false"
 				/>
 			</div>
 			<div>
@@ -26,8 +27,8 @@
 				</select>
 			</div>
 			<div>
-				<label for="regional_id">Especialidades</label>
-				<app-multi-selector formControlName="regional_id" [items]="especialidades()"></app-multi-selector>
+				<label for="especialidades">Especialidades</label>
+				<app-multi-selector formControlName="especialidades" [items]="especialidades()"></app-multi-selector>
 			</div>
 		</div>
 		<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
