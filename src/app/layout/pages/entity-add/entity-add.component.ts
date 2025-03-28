@@ -1,36 +1,45 @@
-import { AsyncPipe, NgClass } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { Component, OnDestroy, signal } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IRegional } from '@types';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { catchError, Observable, of, startWith, Subject, switchMap } from 'rxjs';
+import { IEntityAddPayload, IEspecialidade, IRegional } from '@types';
+import { catchError, combineLatest, map, Observable, of, startWith, Subject, switchMap } from 'rxjs';
 import { ContainerBaseComponent } from 'src/app/components/container-base/container-base.component';
 import { AlertService } from 'src/app/services/alert/alert.service';
-import { RegionalService } from 'src/app/services/regional/regional.service';
+import { EntityService } from 'src/app/services/entity/entity.service';
+import { RegionaisService } from 'src/app/services/regionais/regionais.service';
 import { FormUtils } from 'src/app/utils';
+import { EntityFormComponent } from '../../../components/entity-form/entity-form.component';
 
 @Component({
 	selector: 'app-entity-add',
 	standalone: true,
-	imports: [ContainerBaseComponent, FormsModule, ReactiveFormsModule, NgClass, NgxMaskDirective, AsyncPipe],
-	providers: [provideNgxMask()],
+	imports: [ContainerBaseComponent, AsyncPipe, EntityFormComponent],
 	templateUrl: './entity-add.component.html',
 	styleUrl: './entity-add.component.scss'
 })
 export class EntityAddComponent implements OnDestroy {
 	protected entityForm: FormGroup;
+	protected isFormSubmited = signal<boolean>(false);
+	protected isLoading = signal<boolean>(false);
 	protected formUtils = FormUtils;
-	protected isFormSubmited = false;
-	protected regional$!: Observable<IRegional[]>;
-	protected erro: Error | null = null;
+
+	protected regionais$!: Observable<IRegional[]>;
+	protected especialidades$!: Observable<IEspecialidade[]>;
+	protected dataCombined$ = combineLatest([
+		this.regionais$ ?? of([]) // Garantir um fluxo válido se undefined
+		//this.especialidades$ ?? of([]) // Garantir um fluxo válido se undefined
+	]).pipe(map(([regionais]) => ({ regionais })));
+
 	private reloadTrigger$ = new Subject<void>();
+	protected erro = signal<Error | null>(null);
 
 	constructor(
 		private router: Router,
 		private fb: FormBuilder,
-		private regionalService: RegionalService,
-		private alertService: AlertService
+		private regionalService: RegionaisService,
+		private alertService: AlertService,
+		private entityService: EntityService
 	) {
 		this.entityForm = this.fb.group({
 			razao_social: new FormControl('', [Validators.required, FormUtils.notEmpty]),
@@ -38,25 +47,49 @@ export class EntityAddComponent implements OnDestroy {
 			cnpj: new FormControl('', [Validators.required, FormUtils.notEmpty]),
 			regional_id: new FormControl('', [Validators.required, FormUtils.noSelect('')]),
 			data_inauguracao: new FormControl('', [Validators.required, FormUtils.notEmpty]),
-			ativa: new FormControl(false)
+			ativa: new FormControl(false),
+			especialidades: new FormControl()
 		});
 
-		this.regional$ = this.reloadTrigger$.pipe(
+		/* this.regional$ = this.reloadTrigger$.pipe(
 			startWith(undefined),
 			switchMap(() =>
 				this.regionalService.list().pipe(
 					catchError((err) => {
-						this.erro = err; // Captura o erro
+						this.erro.set(err); // Captura o erro
 						this.alertService.add('error', 'Ocorreu um erro ao carregar dados.');
 						return of([]); // Retorna fallback (lista vazia)
 					})
 				)
 			)
+		); */
+
+		this.dataCombined$ = this.reloadTrigger$.pipe(
+			startWith(undefined), // Dispara o carregamento inicial
+			switchMap(() =>
+				combineLatest([
+					this.regionalService.list().pipe(
+						catchError((err) => {
+							this.erro.set(err); // Captura o erro
+							this.alertService.add('error', 'Erro ao carregar regionais.');
+							return of([]); // Retorna fallback vazio
+						})
+					)
+					/* this.especialidadesService.list().pipe(
+						catchError((err) => {
+							this.erro.set(err); // Captura o erro
+							this.alertService.add('error', 'Erro ao carregar especialidades.');
+							return of([]); // Retorna fallback vazio
+						})
+					) */
+				])
+			),
+			map(([regionais]) => ({ regionais }))
 		);
 	}
 
 	reloadData() {
-		this.erro = null; // Reseta o estado de erro
+		this.erro.set(null); // Reseta o estado de erro
 		this.reloadTrigger$.next();
 	}
 
@@ -69,9 +102,30 @@ export class EntityAddComponent implements OnDestroy {
 	}
 
 	save(): void {
-		this.isFormSubmited = true;
+		this.isFormSubmited.set(true);
 		if (this.formUtils.valid(this.entityForm)) {
-			console.log('form: ', this.entityForm.getRawValue());
+			this.entityForm.disable(); // Desabilita todos os campos enquanto o login está em andamento
+			this.isLoading.set(true);
+
+			// Cria o payload
+			const payload: IEntityAddPayload = this.entityForm.getRawValue();
+
+			this.entityService.add(payload).subscribe({
+				next: () => {
+					this.entityForm.reset();
+				},
+				error: () => {
+					this.alertService.add('error', 'Falha ao adicionar entidade!');
+					this.entityForm.enable(); // Reabilita o formulário para edição
+					this.isLoading.set(false);
+					this.isFormSubmited.set(false);
+				},
+				complete: () => {
+					this.entityForm.enable(); // Reabilita o formulário
+					this.isLoading.set(false);
+					this.isFormSubmited.set(false);
+				}
+			});
 		} else {
 			this.invalidFormFeedback(); // Exibe mensagem de erro caso o formulário seja inválido
 

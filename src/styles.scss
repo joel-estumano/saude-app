@@ -85,7 +85,7 @@
 	@apply uppercase;
 }
 
-label {
+label:not(.multi-selector-item) {
 	@apply flex justify-start text-sm mb-1 ms-1 text-accent font-semibold;
 }
 
@@ -113,13 +113,13 @@ select.is-invalid {
 
 /* Tailwind CSS para o tema personalizado */
 .checkbox {
-	@apply w-5 h-5 rounded-lg outline-none bg-background border px-3 py-2 focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
+	@apply w-5 h-5 accent-accent rounded-lg outline-none bg-background border px-3 py-2 focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
 }
 
 .checkbox-label {
 	@apply flex items-center gap-2 text-sm cursor-pointer w-fit;
 }
-//.default
-button {
-	@apply w-auto rounded-lg bg-background px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-accent transition-all ease-in-out duration-300 max-sm:duration-0;
+
+button.default {
+	@apply w-auto min-w-24 rounded-lg bg-background px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-accent transition-all ease-in-out duration-300 max-sm:duration-0;
 }

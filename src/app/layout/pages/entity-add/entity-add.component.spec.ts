@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EntityAddComponent } from './entity-add.component';
-import { RegionalService } from 'src/app/services/regional/regional.service';
+import { RegionaisService } from 'src/app/services/regionais/regionais.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
@@ -11,7 +11,7 @@ describe('EntityAddComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [EntityAddComponent],
-			providers: [RegionalService, provideHttpClient(), provideHttpClientTesting()]
+			providers: [RegionaisService, provideHttpClient(), provideHttpClientTesting()]
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(EntityAddComponent);

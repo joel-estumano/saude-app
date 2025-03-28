@@ -1,17 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-import { RegionalService } from './regional.service';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
 
-describe('RegionalService', () => {
-	let service: RegionalService;
+import { EntityService } from './entity.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+
+describe('EntityService', () => {
+	let service: EntityService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [],
 			providers: [provideHttpClient(), provideHttpClientTesting()]
 		});
-		service = TestBed.inject(RegionalService);
+		service = TestBed.inject(EntityService);
 	});
 
 	it('should be created', () => {

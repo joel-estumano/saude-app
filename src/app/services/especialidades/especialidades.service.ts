@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../http/http.service';
 import { map, Observable } from 'rxjs';
-import { IRegional } from '@types';
+import { IEspecialidade } from '@types';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class RegionalService {
+export class EspecialidadesService {
 	constructor(private httpService: HttpService) {}
 
-	list(): Observable<IRegional[]> {
-		return this.httpService.get<{ data: IRegional[] }>('regionais').pipe(map((res) => res.data));
+	list(): Observable<IEspecialidade[]> {
+		return this.httpService.get<{ data: IEspecialidade[] }>('especialidades').pipe(map((res) => res.data));
 	}
 }
