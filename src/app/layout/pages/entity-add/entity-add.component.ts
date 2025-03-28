@@ -111,6 +111,7 @@ export class EntityAddComponent implements OnDestroy {
 				next: () => {
 					this.alertService.add('success', 'Operação realizada com sucesso!');
 					this.entityForm.reset();
+					this.entityForm.patchValue({ ativa: false });
 				},
 				error: () => {
 					this.alertService.add('error', 'Falha em salva entidade!');

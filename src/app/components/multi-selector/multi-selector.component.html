@@ -8,7 +8,7 @@
 	<div [class.open]="isOpen()" class="multi-selector-menu">
 		@for (item of items(); track item[selectionKey()]) {
 			<label class="multi-selector-item">
-				<input type="checkbox" [checked]="checkedValues(item)" (change)="toggleSelection(item)" />
+				<input type="checkbox" [checked]="checkedValues()(item)" (change)="toggleSelection(item)" />
 				<span>{{ item[label()] }}</span>
 			</label>
 		}

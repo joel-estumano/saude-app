@@ -1,4 +1,4 @@
-import { Component, forwardRef, HostListener, input, signal } from '@angular/core';
+import { Component, computed, forwardRef, HostListener, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -42,7 +42,7 @@ export class MultiSelectorComponent<T, K extends keyof T> implements ControlValu
 	/**
 	 * Lista interna que mantém os itens selecionados.
 	 */
-	protected selectedItems: T[] = [];
+	protected selectedItems = signal<T[]>([]);
 
 	// Funções do ControlValueAccessor
 	private onChange: (value: T[keyof T][]) => void = () => {
@@ -58,12 +58,12 @@ export class MultiSelectorComponent<T, K extends keyof T> implements ControlValu
 	 */
 	toggleSelection(item: T) {
 		const value = item[this.selectionKey()];
-		const index = this.selectedItems.findIndex((i: T) => i[this.selectionKey()] === value);
+		const index = this.selectedItems().findIndex((i: T) => i[this.selectionKey()] === value);
 
 		if (index > -1) {
-			this.selectedItems.splice(index, 1); // Remove da lista
+			this.selectedItems().splice(index, 1); // Remove da lista
 		} else {
-			this.selectedItems.push(item); // Adiciona à lista
+			this.selectedItems().push(item); // Adiciona à lista
 		}
 
 		this.emitSelection();
@@ -72,22 +72,23 @@ export class MultiSelectorComponent<T, K extends keyof T> implements ControlValu
 	/**
 	 * Retorna o estado de seleção de um item específico.
 	 */
-	checkedValues(item: T) {
-		return this.selectedItems.some((i) => i[this.selectionKey()] === item[this.selectionKey()]);
-	}
+	// Computed Signal que calcula os checkedValues dinamicamente
+	checkedValues = computed(() => {
+		return (item: T) => this.selectedItems().some((i) => i[this.selectionKey()] === item[this.selectionKey()]);
+	});
 
 	/**
 	 * Emite os valores selecionados para o FormControl.
 	 * Caso uma chave específica seja definida, envia apenas os valores dessa chave.
 	 */
 	private emitSelection() {
-		this.onChange(this.selectedItems.map((item) => item[this.selectionKey()]));
+		this.onChange(this.selectedItems().map((item) => item[this.selectionKey()]));
 	}
 
 	// Métodos do ControlValueAccessor:
 	writeValue(value: T[keyof T][]): void {
 		if (Array.isArray(value)) {
-			this.selectedItems = this.items()?.filter((item: T) => value.includes(item[this.selectionKey()])) || [];
+			this.selectedItems.set(this.items()?.filter((item: T) => value.includes(item[this.selectionKey()])) || []);
 		}
 	}
 
@@ -112,8 +113,10 @@ export class MultiSelectorComponent<T, K extends keyof T> implements ControlValu
 	 * Obtém o rótulo exibido no botão principal.
 	 */
 	getSelectedLabel(): string {
-		if (!this.selectedItems.length) return '';
-		return this.selectedItems.map((item) => item[this.label()]).join(', ');
+		if (!this.selectedItems().length) return '';
+		return this.selectedItems()
+			.map((item) => item[this.label()])
+			.join(', ');
 	}
 
 	/**
