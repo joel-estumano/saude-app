@@ -60,8 +60,9 @@ export class EditComponent implements OnDestroy {
 						});
 					},
 					error: () => {
-						this.alertService.add('error', 'Falha ao excluir entidade!');
-						this.modalService.close();
+						this.alertService.add('error', 'Falha ao excluir entidade!', 1500).subscribe(() => {
+							this.modalService.close();
+						});
 					},
 					complete: () => {
 						instance.isLoading.set(false);

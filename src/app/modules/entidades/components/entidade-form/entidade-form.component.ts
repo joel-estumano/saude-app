@@ -139,7 +139,7 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 			map(({ regionais, especialidades }) => ({ regionais, especialidades })),
 			catchError((err) => {
 				this.erro.set(err || true);
-				this.alertService.add('error', 'Erro ao carregar dados!');
+				this.alertService.add('error', 'Erro ao carregar dados!', 1500).subscribe();
 				return of({ regionais: [], especialidades: [] });
 			})
 		);
@@ -210,10 +210,11 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 							});
 						},
 						error: () => {
-							this.alertService.add('error', 'Falha ao editar entidade!');
-							this.form.enable();
-							this.isLoading.set(false);
-							this.isFormSubmited.set(false);
+							this.alertService.add('error', 'Falha ao editar entidade!').subscribe(() => {
+								this.form.enable();
+								this.isLoading.set(false);
+								this.isFormSubmited.set(false);
+							});
 						},
 						complete: () => {
 							this.form.enable();
@@ -230,10 +231,11 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 						});
 					},
 					error: () => {
-						this.alertService.add('error', 'Falha ao salvar entidade!');
-						this.form.enable();
-						this.isLoading.set(false);
-						this.isFormSubmited.set(false);
+						this.alertService.add('error', 'Falha ao salvar entidade!').subscribe(() => {
+							this.form.enable();
+							this.isLoading.set(false);
+							this.isFormSubmited.set(false);
+						});
 					},
 					complete: () => {
 						this.form.enable();
@@ -274,7 +276,7 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 		});
 
 		erros.forEach((element) => {
-			this.alertService.add('error', `${element.field} ${element.errors.join(', ')}.`);
+			this.alertService.add('error', `${element.field} ${element.errors.join(', ')}.`).subscribe();
 		});
 	}
 
