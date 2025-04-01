@@ -1,7 +1,7 @@
+import { AlertService } from '../services/alert/alert.service';
+import { AuthService } from '../modules/auth/services/auth.service';
 import { Component, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from '../auth/services/auth.service';
-import { AlertService } from '../services/alert/alert.service';
 
 @Component({
 	selector: 'app-layout',

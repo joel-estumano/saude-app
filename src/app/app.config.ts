@@ -14,7 +14,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 
 import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
-import { httpInterceptorProviders } from './auth/interceptors';
+import { httpInterceptorProviders } from './modules/auth/interceptors';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 registerLocaleData(ptBr);
 

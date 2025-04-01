@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,7 +14,7 @@ export class HttpService {
 	 * @param httpClient - Cliente HTTP Angular para fazer requisições.
 	 */
 	constructor(private httpClient: HttpClient) {
-		this.apiURL = 'api';
+		this.apiURL = environment.apiURL;
 		this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 	}
 

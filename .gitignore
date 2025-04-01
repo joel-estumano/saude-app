@@ -41,6 +41,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Ambiente vars
-src/environments/environment.prod.ts
+# variáveis ​​de ambiente
+src/environments/environment.development.ts
+src/environments/environment.production.ts
 

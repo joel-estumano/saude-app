@@ -23,8 +23,8 @@
 		"baseUrl": "./",
 		"paths": {
 			"@components/*": ["src/app/components/*"],
-			"@tokens/*": ["src/app/tokens/*"],
-			"@types": ["src/app/types/index.ts"]
+			"@interfaces": ["src/app/types/interfaces/index.ts"],
+			"@tokens/*": ["src/app/tokens/*"]
 		}
 	},
 	"angularCompilerOptions": {

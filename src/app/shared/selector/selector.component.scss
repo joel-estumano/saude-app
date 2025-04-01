@@ -1,0 +1,58 @@
+/* Estilização principal do componente selector */
+.selector {
+	/* Define a posição relativa e largura total para o container */
+	@apply relative w-full;
+}
+
+/* Botão de alternância para abrir/fechar o menu */
+.selector-toggle {
+	/* Estilo visual básico: fundo, borda arredondada, tamanho e alinhamento */
+	@apply bg-background border rounded-lg py-2 px-3 w-full text-left text-sm cursor-pointer;
+
+	/* Adiciona efeitos de foco para indicar interatividade ao usuário */
+	@apply focus:ring-1 focus:ring-accent;
+
+	/* Ajusta o tamanho mínimo para evitar encolhimento, define altura fixa e animação suave */
+	@apply shrink-0 h-[38px] transition-all ease-in-out duration-300;
+}
+
+/* Adiciona estilos ao estado inválido do botão de alternância */
+.selector-toggle.is-invalid {
+	/* Realça o botão com borda e foco em vermelho para indicar erro */
+	@apply border border-destructive focus:outline-none focus:ring-1 focus:ring-destructive focus:border-destructive;
+}
+
+/* Estilização do menu suspenso */
+.selector-menu {
+	/* Define posicionamento absoluto e estilo visual para o menu */
+	@apply absolute bg-background border rounded-lg shadow-lg mt-2 w-full;
+
+	/* Configura altura máxima, barra de rolagem e oculta o menu por padrão */
+	@apply z-10 max-h-60 overflow-y-auto hidden;
+}
+
+/* Estilos quando o menu estiver aberto */
+.selector-menu.open {
+	/* Exibe o menu suspenso */
+	@apply block;
+}
+
+/* Estilização dos itens dentro do menu */
+.selector-item {
+	/* Alinha os itens em linha com espaço entre eles, e adiciona espaçamento interno */
+	@apply flex items-center gap-2 px-3 py-2 w-full;
+
+	/* Estilo de texto e cursor interativo ao passar o mouse sobre o item */
+	@apply hover:bg-gray-100 text-sm cursor-pointer;
+}
+
+// Estilo para destacar a opção selecionada
+.selector-item.selected {
+	@apply bg-gray-100;
+}
+
+/* Estilo para os elementos de entrada (checkbox, radio) dentro dos itens */
+.selector-item input {
+	/* Adiciona cor ao elemento de entrada */
+	@apply accent-accent w-fit;
+}
