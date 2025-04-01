@@ -10,7 +10,7 @@
 	--card-foreground: 220 20% 10%; /* cinza escuro consistente */
 	--popover: 220 10% 95%; /* leve contraste para popovers */
 	--popover-foreground: 220 15% 15%; /* leitura clara no popover */
-	--primary: 210 30% 60%; /* azul suave e confiável */
+	--primary: 218, 61%, 55%; /* azul suave e confiável */
 	--primary-foreground: 0 0% 100%; /* branco para contraste no botão primário */
 	--secondary: 190 20% 85%; /* verde claro e calmante */
 	--secondary-foreground: 190 20% 20%; /* verde médio */
@@ -94,7 +94,7 @@ label:not(.selector-item, .multi-selector-item) {
 /* Classe padrão input e textarea */
 input,
 textarea {
-	@apply w-full rounded-lg outline-none bg-background px-3 py-2 border focus:outline-none focus:ring-1 focus:ring-accent text-sm  transition-all ease-in-out duration-300 max-sm:duration-0;
+	@apply w-full rounded-none outline-none bg-background px-3 py-2 border focus:outline-none focus:ring-1 focus:ring-accent text-sm  transition-all ease-in-out duration-300 max-sm:duration-0;
 }
 
 /* Classe para estados inválidos em input e textarea */
@@ -105,7 +105,7 @@ textarea.is-invalid {
 
 /* Classe padrão para o select */
 select {
-	@apply w-full rounded-lg outline-none bg-background px-3 py-2 border focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
+	@apply w-full rounded-none outline-none bg-background px-3 py-2 border focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
 }
 
 /* Classe para estados inválidos do select */
@@ -115,7 +115,7 @@ select.is-invalid {
 
 /* Tailwind CSS para o tema personalizado */
 .checkbox {
-	@apply w-5 h-5 accent-accent rounded-lg outline-none bg-background border px-3 py-2 focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
+	@apply w-5 h-5 accent-accent rounded-none outline-none bg-background border px-3 py-2 focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
 }
 
 .checkbox-label {
@@ -123,7 +123,15 @@ select.is-invalid {
 }
 
 button.default {
-	@apply w-auto min-w-24 rounded-lg bg-background px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-accent transition-all ease-in-out duration-300 max-sm:duration-0;
+	@apply w-auto min-w-24 rounded-none bg-white px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-white transition-all ease-in-out duration-300 max-sm:duration-0 text-accent font-semibold;
+}
+
+button.primary {
+	@apply w-auto min-w-24 rounded-none bg-primary px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all ease-in-out duration-300 max-sm:duration-0 text-white font-semibold;
+}
+
+button.remove {
+	@apply w-auto min-w-24 rounded-none bg-destructive px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-destructive transition-all ease-in-out duration-300 max-sm:duration-0 text-white font-semibold;
 }
 
 // .no-scrollbar {

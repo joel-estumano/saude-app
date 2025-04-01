@@ -1,0 +1,13 @@
+<div class="flex flex-col items-center gap-8">
+	<p class="f6 !text-destructive">Excluir Entidade</p>
+
+	<p class="text-center">
+		Deseja realmente excluir a entidade? <br /><span class="font-semibold"> {{ this.entidade()?.nome_fantasia }}</span>
+	</p>
+	<div class="inline-flex justify-center gap-5">
+		<button type="button" class="default" title="Cancelar" (click)="cancel()" [disabled]="this.isLoading()">Cancelar</button>
+		<button type="submit" class="remove" title="Confirmar" (click)="confirm()" [disabled]="this.isLoading()">
+			{{ this.isLoading() ? "Excluindo" : "Confirmar" }}
+		</button>
+	</div>
+</div>

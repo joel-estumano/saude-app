@@ -1,63 +1,99 @@
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { catchError, forkJoin, map, Observable, of, startWith, Subject, switchMap } from 'rxjs';
-import { ChangeDetectionStrategy, Component, computed, input, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { EntidadeAddPayload, EntidadeData, IEspecialidadeData, IRegionalData } from '@interfaces';
 import { EntidadesService } from '../../services/entidades.service';
 import { EspecialidadesService } from 'src/app/modules/especialidades/services/especialidades.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormUtils } from 'src/app/utils';
-import { Pipe, PipeTransform } from '@angular/core';
 import { RegionaisService } from 'src/app/modules/regionais/services/regionais.service';
 import { Router } from '@angular/router';
 
-@Pipe({
-	name: 'action'
-})
-export class ActionPipe implements PipeTransform {
-	/**
-	 * Transforma o estado de carregamento e edição em texto apropriado.
-	 *
-	 * @param isLoading - Indica se está carregando (boolean).
-	 * @param isEdit - Indica se está em modo de edição (boolean).
-	 * @returns Retorna o texto apropriado: "Salvando", "Salvar", "Editando", ou "Editar".
-	 */
-	transform(isLoading: boolean, isEdit: boolean): string {
-		if (isLoading && isEdit) {
-			return 'Editando';
-		}
-		if (isLoading) {
-			return 'Salvando';
-		}
-		return isEdit ? 'Editar' : 'Salvar';
-	}
-}
-
+/**
+ * Componente de formulário para criação e edição de entidades.
+ *
+ * Este componente gerencia o formulário para criar ou editar entidades, além de interagir com
+ * serviços responsáveis por dados regionais e especialidades. Ele também controla estados reativos
+ * como carregamento e submissão do formulário.
+ */
 @Component({
 	selector: 'app-entidade-form',
 	templateUrl: './entidade-form.component.html',
-	styleUrl: './entidade-form.component.scss',
+	styleUrls: ['./entidade-form.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntidadeFormComponent implements OnInit, OnDestroy {
+	/**
+	 * Entidade atualmente sendo editada ou criada.
+	 * Caso esteja presente, indica que o formulário está no modo de edição.
+	 */
 	public entidade = input<EntidadeData | undefined>(undefined);
 
+	/**
+	 * Emite eventos indicando se o formulário ou processo está desabilitado.
+	 * Geralmente usado para desabilitar interações enquanto o carregamento está ativo.
+	 */
+	public isDisabled = output<boolean>();
+
+	/**
+	 * Indica se o formulário está no modo de edição.
+	 * O valor será `true` caso `entidade` esteja definida.
+	 */
 	protected isEdit = computed((): boolean => {
 		return this.entidade() !== undefined;
 	});
 
+	/**
+	 * Instância do formulário reativo usado para coletar os dados.
+	 */
 	protected form!: FormGroup;
+
+	/**
+	 * Indica se o formulário foi submetido.
+	 * Usado para validar e exibir feedback ao usuário após tentativas de envio.
+	 */
 	protected isFormSubmited = signal<boolean>(false);
+
+	/**
+	 * Indica o estado de carregamento do componente.
+	 * Enquanto `true`, impede ações adicionais no formulário.
+	 */
 	protected isLoading = signal<boolean>(false);
+
+	/**
+	 * Utilitários auxiliares para manipulação de formulários.
+	 */
 	protected formUtils = FormUtils;
 
+	/**
+	 * Observable que contém dados de regionais disponíveis para seleção.
+	 */
 	protected regionais$!: Observable<IRegionalData[]>;
+
+	/**
+	 * Observable que contém dados de especialidades disponíveis para seleção.
+	 */
 	protected especialidades$!: Observable<IEspecialidadeData[]>;
+
+	/**
+	 * Combina os dados de regionais e especialidades em um único Observable.
+	 * Útil para inicializar o formulário com dados pré-carregados.
+	 */
 	protected data$ = forkJoin({
 		regionais: this.regionais$ ?? of([]),
 		especialidades: this.especialidades$ ?? of([])
 	}).pipe(map(({ regionais, especialidades }) => ({ regionais, especialidades })));
 
+	/**
+	 * Sinal para disparar recarregamento de dados.
+	 * Usado para reiniciar o fluxo de dados do formulário.
+	 */
 	private reloadTrigger$ = new Subject<void>();
+
+	/**
+	 * Sinal para capturar e exibir erros do componente.
+	 * Usado para gerenciar feedback ao usuário em cenários de erro.
+	 */
 	protected erro = signal<Error | null>(null);
 
 	constructor(
@@ -68,6 +104,9 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 		private entidadesService: EntidadesService,
 		private alertService: AlertService
 	) {
+		/**
+		 * Inicializa o formulário com as configurações padrão e validações.
+		 */
 		this.form = this.fb.group({
 			razao_social: new FormControl('', [Validators.required, FormUtils.notEmpty]),
 			nome_fantasia: new FormControl('', [Validators.required, FormUtils.notEmpty]),
@@ -78,6 +117,17 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 			especialidades: new FormControl('', [Validators.required, FormUtils.arrayMinLength(5)])
 		});
 
+		/**
+		 * Observa mudanças no estado de carregamento para emitir eventos públicos.
+		 */
+		effect(() => {
+			const loadingValue = this.isLoading();
+			this.isDisabled.emit(loadingValue);
+		});
+
+		/**
+		 * Combina dados regionais e especialidades e captura erros na inicialização.
+		 */
 		this.data$ = this.reloadTrigger$.pipe(
 			startWith(undefined),
 			switchMap(() =>
@@ -95,6 +145,9 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	/**
+	 * Configura o formulário com valores iniciais quando em modo de edição.
+	 */
 	ngOnInit(): void {
 		if (this.isEdit()) {
 			const formValues: EntidadeAddPayload = {
@@ -110,17 +163,29 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	reloadData() {
+	/**
+	 * Recarrega os dados de regionais e especialidades.
+	 * Reseta o estado de erro e dispara o trigger de recarregamento.
+	 */
+	reloadData(): void {
 		this.erro.set(null);
 		this.reloadTrigger$.next();
 	}
 
+	/**
+	 * Cancela a operação e retorna à página inicial.
+	 */
 	cancel(): void {
 		this.router.navigate(['/']);
 	}
 
-	submit() {
+	/**
+	 * Submete os dados do formulário, salvando ou editando uma entidade.
+	 * Exibe mensagens de sucesso ou erro com base nos resultados da operação.
+	 */
+	submit(): void {
 		this.isFormSubmited.set(true);
+
 		if (this.formUtils.valid(this.form)) {
 			this.form.disable();
 			this.isLoading.set(true);
@@ -137,10 +202,12 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 
 			if (this.isEdit()) {
 				const entidade = this.entidade() ? this.entidade() : undefined;
-				if (this.isEdit() && entidade) {
+				if (entidade) {
 					this.entidadesService.edit(entidade.uuid, payload).subscribe({
-						next: () => {
-							this.alertService.add('success', 'Operação realizada com sucesso!');
+						next: (result) => {
+							this.alertService.add('success', 'Operação realizada com sucesso!', 1500).subscribe(() => {
+								this.router.navigate(['visualizar', result.uuid]);
+							});
 						},
 						error: () => {
 							this.alertService.add('error', 'Falha ao editar entidade!');
@@ -157,10 +224,10 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 				}
 			} else {
 				this.entidadesService.add(payload).subscribe({
-					next: () => {
-						this.alertService.add('success', 'Operação realizada com sucesso!');
-						this.form.reset();
-						this.form.patchValue({ ativa: false });
+					next: (result) => {
+						this.alertService.add('success', 'Operação realizada com sucesso!', 1500).subscribe(() => {
+							this.router.navigate(['visualizar', result.uuid]);
+						});
 					},
 					error: () => {
 						this.alertService.add('error', 'Falha ao salvar entidade!');
@@ -181,8 +248,7 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Feedback para informar ao usuário sobre campos inválidos no formulário.
-	 * Traduz e exibe mensagens de erro personalizadas.
+	 * Exibe feedback sobre campos inválidos no formulário.
 	 */
 	private invalidFormFeedback(): void {
 		const erros = this.formUtils.listFormErrors(this.form).map((error) => {
@@ -195,7 +261,7 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 						case 'regional_id':
 							return 'Regional';
 						case 'razao_social':
-							return 'Razao Social ';
+							return 'Razão Social';
 						case 'nome_fantasia':
 							return 'Nome Fantasia';
 						case 'data_inauguracao':
@@ -206,12 +272,15 @@ export class EntidadeFormComponent implements OnInit, OnDestroy {
 				})()
 			};
 		});
-		// Itera sobre os erros encontrados e exibe mensagens de alerta
+
 		erros.forEach((element) => {
 			this.alertService.add('error', `${element.field} ${element.errors.join(', ')}.`);
 		});
 	}
 
+	/**
+	 * Limpa todos os alert
+	 */
 	ngOnDestroy(): void {
 		this.alertService.clearAll();
 	}

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { LocaleService } from './services/locale/locale.service';
 import { RouterOutlet } from '@angular/router';
+import { ModalComponent } from './shared/modal/modal.component';
 
 @Component({
 	selector: 'app-root',
 	standalone: true,
-	imports: [CommonModule, RouterOutlet, AlertComponent],
+	imports: [CommonModule, RouterOutlet, AlertComponent, ModalComponent],
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss']
 })

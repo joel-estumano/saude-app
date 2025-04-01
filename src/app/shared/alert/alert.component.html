@@ -2,7 +2,9 @@
 	@for (alert of alerts; track $index) {
 		<div class="fade-in alert" [ngClass]="alert.type === 'error' ? 'alert-erro' : 'alert-success'">
 			<span class="first-uppercase">{{ alert.message }}</span>
-			<button class="btn-x-close" title="Fechar" (click)="remove($index)">x</button>
+			<button class="btn-x-close" title="Fechar" (click)="remove($index)">
+				<app-icon icon="heroXMark" />
+			</button>
 		</div>
 	}
 </div>

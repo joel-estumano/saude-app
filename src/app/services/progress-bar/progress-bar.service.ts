@@ -14,7 +14,6 @@ export class ProgressBarService {
 
 	showProgress(): void {
 		this.requestCount++;
-		console.log('showProgress chamado, requisições ativas:', this.requestCount);
 		this.updateProgressState();
 	}
 
@@ -22,7 +21,6 @@ export class ProgressBarService {
 		if (this.requestCount > 0) {
 			this.requestCount--;
 		}
-		console.log('hideProgress chamado, requisições ativas:', this.requestCount);
 		this.updateProgressState();
 	}
 

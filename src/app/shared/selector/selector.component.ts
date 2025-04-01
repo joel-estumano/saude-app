@@ -37,6 +37,12 @@ export class SelectorComponent<T, K extends keyof T> implements ControlValueAcce
 	label = input<K>('label' as K);
 
 	/**
+	 * Indica se o item está desabilitado.
+	 * Aceita um valor booleano. O padrão é `false`.
+	 */
+	isLoading = input<boolean>(false);
+
+	/**
 	 * Classe CSS dinâmica para estilização.
 	 * Deve ser fornecida como entrada.
 	 */

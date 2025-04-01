@@ -36,6 +36,12 @@ export class MultiSelectorComponent<T, K extends keyof T> implements ControlValu
 	label = input<K>('label' as K);
 
 	/**
+	 * Indica se o item está desabilitado.
+	 * Aceita um valor booleano. O padrão é `false`.
+	 */
+	isLoading = input<boolean>(false);
+
+	/**
 	 * Classes CSS dinâmicas para estilização. Passadas como entrada.
 	 */
 	ngClass = input<Record<string, boolean>>();

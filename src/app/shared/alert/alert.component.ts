@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { NgClass } from '@angular/common';
 import { IAlert } from '@interfaces';
 import { AlertService } from 'src/app/services/alert/alert.service';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
 	selector: 'app-alert',
 	standalone: true,
-	imports: [NgClass],
+	imports: [NgClass, IconComponent],
 	templateUrl: './alert.component.html',
 	styleUrls: ['./alert.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush

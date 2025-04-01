@@ -2,34 +2,95 @@
 	@if (!this.erro()) {
 		@if (entidades$ | async; as entidades) {
 			<div class="flex flex-col gap-16">
-				<div class="flex flex-col items-center justify-between sm:flex-row max-sm:flex-col">
+				<div class="flex items-center justify-between gap-8 sm:flex-row max-sm:flex-col-reverse">
 					<h2 class="f2">Entidades</h2>
-					<button class="default" title="Criar Nova Entidade" (click)="add()">Nova Entidade</button>
+					<button type="button" class="primary" title="Criar Nova Entidade" (click)="add()">Nova Entidade</button>
 				</div>
+
+				<div>
+					<input type="search" [formControl]="searchField" />
+				</div>
+
 				<div class="block w-full">
-					<ul>
-						@for (entidade of entidades; track entidade.uuid; let idx = $index, o = $odd) {
-							<li class="flex items-center justify-between gap-1 px-2 py-1 space-y-2" [ngClass]="{ 'bg-muted': o }">
-								<div>{{ entidade.nome_fantasia }}</div>
-								<div class="flex items-center h-full gap-x-2">
-									<button
-										class="flex items-center justify-center w-8 h-8 text-lg shrink-0"
-										title="Visualizar Entidade"
-										(click)="read(entidade.uuid)"
-									>
-										<app-icon icon="heroEye" />
-									</button>
-									<button
-										class="flex items-center justify-center w-8 h-8 text-lg shrink-0"
-										title="Editar Entidade"
-										(click)="edit(entidade.uuid)"
-									>
-										<app-icon icon="heroPencil" />
-									</button>
-								</div>
-							</li>
-						}
-					</ul>
+					@if (entidades.length) {
+						<!-- Cabeçalho da "Tabela" -->
+						<div class="hidden bg-gray-200 sm:grid sm:grid-cols-[2fr_1fr_2fr_1fr_1fr_auto] sm:gap-1 sm:px-2 sm:py-1 text-sm font-semibold">
+							<div class="">Nome Fantasia</div>
+							<div class="">Região</div>
+							<div class="">Especialidades</div>
+							<div class="">Ativa</div>
+							<div class="text-xs text-cents">Ações</div>
+							<div class=""></div>
+							<!-- Coluna vazia para alinhamento -->
+						</div>
+
+						<!-- Corpo da "Tabela" -->
+
+						<ul>
+							@for (entidade of entidades; track entidade.uuid; let idx = $index, o = $odd) {
+								<li
+									class="grid items-start grid-cols-1 gap-4 px-4 py-2 border-b sm:items-center sm:grid-cols-[2fr_1fr_2fr_1fr_1fr_auto] text-sm"
+									[ngClass]="{ 'bg-muted': o }"
+								>
+									<!-- Nome Fantasia -->
+									<div>
+										<span class="block font-semibold sm:hidden">Nome Fantasia:</span>
+										{{ entidade.nome_fantasia }}
+									</div>
+
+									<!-- Região -->
+									<div>
+										<span class="block font-semibold sm:hidden">Região:</span>
+										{{ entidade.regional.label }}
+									</div>
+
+									<!-- Especialidades -->
+									<div>
+										<span class="block font-semibold sm:hidden">Especialidades:</span>
+										<!-- {{ entidade.especialidades }} -->
+									</div>
+
+									<!-- Ativa -->
+									<div>
+										<span class="block font-semibold sm:hidden">Ativa:</span>
+										<app-icon
+											class="w-8 h-8 text-2xl shrink-0"
+											[icon]="entidade.ativa ? 'heroCheck' : 'heroMinus'"
+											[ngClass]="entidade.ativa ? 'text-success' : 'text-destructive'"
+										/>
+									</div>
+
+									<!-- Ações -->
+									<div class="flex items-center justify-start gap-3 sm:justify-center">
+										<button
+											type="button"
+											class="flex items-center justify-center w-8 h-8 text-lg shrink-0"
+											title="Visualizar Entidade"
+											(click)="read(entidade.uuid)"
+										>
+											<app-icon icon="heroEye" class="text-yellow-600" />
+										</button>
+										<button
+											type="button"
+											class="flex items-center justify-center w-8 h-8 text-lg shrink-0"
+											title="Editar Entidade"
+											(click)="edit(entidade.uuid)"
+										>
+											<app-icon icon="heroPencil" class="text-green-700" />
+										</button>
+									</div>
+
+									<!-- Espaço Extra -->
+									<div class="hidden sm:block"></div>
+								</li>
+							}
+						</ul>
+					} @else {
+						<div class="flex flex-col items-center w-full gap-8">
+							<p>Não foram encontrados resultados.</p>
+							<h2 class="f4">Ops! :(</h2>
+						</div>
+					}
 				</div>
 			</div>
 		} @else {

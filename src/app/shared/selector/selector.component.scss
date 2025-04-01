@@ -7,7 +7,7 @@
 /* Botão de alternância para abrir/fechar o menu */
 .selector-toggle {
 	/* Estilo visual básico: fundo, borda arredondada, tamanho e alinhamento */
-	@apply bg-background border rounded-lg py-2 px-3 w-full text-left text-sm cursor-pointer;
+	@apply bg-background border rounded-none py-2 px-3 w-full text-left text-sm cursor-pointer disabled:cursor-default;
 
 	/* Adiciona efeitos de foco para indicar interatividade ao usuário */
 	@apply focus:ring-1 focus:ring-accent;
@@ -25,7 +25,7 @@
 /* Estilização do menu suspenso */
 .selector-menu {
 	/* Define posicionamento absoluto e estilo visual para o menu */
-	@apply absolute bg-background border rounded-lg shadow-lg mt-2 w-full;
+	@apply absolute bg-background border rounded-none shadow-lg mt-2 w-full;
 
 	/* Configura altura máxima, barra de rolagem e oculta o menu por padrão */
 	@apply z-10 max-h-60 overflow-y-auto hidden;
@@ -43,7 +43,7 @@
 	@apply flex items-center gap-2 px-3 py-2 w-full;
 
 	/* Estilo de texto e cursor interativo ao passar o mouse sobre o item */
-	@apply hover:bg-gray-100 text-sm cursor-pointer;
+	@apply hover:bg-gray-100 text-sm cursor-pointer disabled:cursor-default;
 }
 
 // Estilo para destacar a opção selecionada

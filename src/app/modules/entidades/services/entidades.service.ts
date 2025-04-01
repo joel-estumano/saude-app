@@ -27,8 +27,8 @@ export class EntidadesService {
 	 * @param data - Objeto contendo os dados da entidade a ser adicionada, conforme o tipo `IEntityAddPayload`.
 	 * @returns Observable contendo a resposta da API com os dados da entidade adicionada.
 	 */
-	add(data: EntidadeAddPayload): Observable<EntidadeAddPayload> {
-		return this.httpService.post<EntidadeAddPayload, { data: EntidadeAddPayload }>('entidades', data).pipe(map((res) => res.data));
+	add(data: EntidadeAddPayload): Observable<EntidadeData> {
+		return this.httpService.post<EntidadeAddPayload, { data: EntidadeData }>('entidades', data).pipe(map((res) => res.data));
 	}
 
 	/**
@@ -56,6 +56,19 @@ export class EntidadesService {
 	 */
 	edit(uuid: string, data: EntidadeAddPayload): Observable<EntidadeData> {
 		return this.httpService.put<EntidadeAddPayload, { data: EntidadeData }>(`entidades/${uuid}`, data).pipe(map((res) => res.data));
+	}
+
+	/**
+	 * Remove uma entidade existente.
+	 *
+	 * Este método realiza uma requisição DELETE para o endpoint `entidades/{uuid}` da API,
+	 * deletando a entidade com o identificador fornecido.
+	 *
+	 * @param uuid - Identificador único da entidade (UUID).
+	 * @returns Observable contendo a resposta da remoção.
+	 */
+	remove(uuid: string): Observable<void> {
+		return this.httpService.delete<void>(`entidades/${uuid}`).pipe(map(() => undefined)); // Retorna um Observable vazio
 	}
 
 	list(): Observable<{ data: { data: EntidadeData[] } }> {
