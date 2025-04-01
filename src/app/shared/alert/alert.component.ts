@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { IAlert } from '@interfaces';
 import { AlertService } from 'src/app/services/alert/alert.service';
@@ -8,15 +8,23 @@ import { AlertService } from 'src/app/services/alert/alert.service';
 	standalone: true,
 	imports: [NgClass],
 	templateUrl: './alert.component.html',
-	styleUrl: './alert.component.scss'
+	styleUrls: ['./alert.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertComponent implements OnInit {
 	alerts: IAlert[] = [];
 
-	constructor(private alertService: AlertService) {}
+	constructor(
+		private alertService: AlertService,
+		private cdr: ChangeDetectorRef
+	) {}
 
 	ngOnInit(): void {
-		this.alertService.getAlerts().subscribe((alerts) => (this.alerts = alerts));
+		// Atualiza alerts e força a detecção de mudanças
+		this.alertService.getAlerts().subscribe((alerts) => {
+			this.alerts = alerts;
+			this.cdr.markForCheck(); // Força detecção de mudanças no componente
+		});
 	}
 
 	remove(index: number): void {

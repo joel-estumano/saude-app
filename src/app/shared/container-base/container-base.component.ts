@@ -1,12 +1,13 @@
 import { NgClass } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
 	selector: 'app-container-base',
 	standalone: true,
 	imports: [NgClass],
 	templateUrl: './container-base.component.html',
-	styleUrl: './container-base.component.scss'
+	styleUrl: './container-base.component.scss',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContainerBaseComponent {
 	/**

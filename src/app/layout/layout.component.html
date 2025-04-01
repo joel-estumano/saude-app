@@ -3,6 +3,9 @@
 		<div class="inline-flex items-center justify-end w-full max-w-screen-xl px-16 mx-auto xl:px-8 max-sm:px-4">
 			<button class="default" title="Sair" (click)="logout()" [disabled]="this.isLoading()">{{ this.isLoading() ? "Saindo" : "Sair" }}</button>
 		</div>
+		<div class="absolute bottom-0 w-full">
+			<app-progress-bar />
+		</div>
 	</nav>
 	<div class="flex flex-col flex-grow overflow-y-auto">
 		<router-outlet />

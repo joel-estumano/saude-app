@@ -1,6 +1,6 @@
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { catchError, forkJoin, map, Observable, of, startWith, Subject, switchMap } from 'rxjs';
-import { Component, computed, input, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, OnDestroy, OnInit, signal } from '@angular/core';
 import { EntidadeAddPayload, EntidadeData, IEspecialidadeData, IRegionalData } from '@interfaces';
 import { EntidadesService } from '../../services/entidades.service';
 import { EspecialidadesService } from 'src/app/modules/especialidades/services/especialidades.service';
@@ -35,7 +35,8 @@ export class ActionPipe implements PipeTransform {
 @Component({
 	selector: 'app-entidade-form',
 	templateUrl: './entidade-form.component.html',
-	styleUrl: './entidade-form.component.scss'
+	styleUrl: './entidade-form.component.scss',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntidadeFormComponent implements OnInit, OnDestroy {
 	public entidade = input<EntidadeData | undefined>(undefined);
