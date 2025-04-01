@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { AlertComponent } from './shared/alert/alert.component';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
 import { LocaleService } from './services/locale/locale.service';
-import { AlertComponent } from './components/alert/alert.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
 	selector: 'app-root',

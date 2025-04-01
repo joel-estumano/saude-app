@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IAlert } from '@types';
+import { IAlert } from '@interfaces';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({

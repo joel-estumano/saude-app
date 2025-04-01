@@ -1,0 +1,45 @@
+<app-container-base>
+	@if (!this.erro()) {
+		@if (entidades$ | async; as entidades) {
+			<div class="flex flex-col gap-16">
+				<div class="flex flex-col items-center justify-between sm:flex-row max-sm:flex-col">
+					<h2 class="f2">Entidades</h2>
+					<button class="default" title="Criar Nova Entidade" (click)="add()">Nova Entidade</button>
+				</div>
+				<div class="block w-full">
+					<ul>
+						@for (entidade of entidades; track entidade.uuid; let idx = $index, o = $odd) {
+							<li class="flex items-center justify-between gap-1 px-2 py-1 space-y-2" [ngClass]="{ 'bg-muted': o }">
+								<div>{{ entidade.nome_fantasia }}</div>
+								<div class="flex items-center h-full gap-x-2">
+									<button
+										class="flex items-center justify-center w-8 h-8 text-lg shrink-0"
+										title="Visualizar Entidade"
+										(click)="read(entidade.uuid)"
+									>
+										<app-icon icon="heroEye" />
+									</button>
+									<button
+										class="flex items-center justify-center w-8 h-8 text-lg shrink-0"
+										title="Editar Entidade"
+										(click)="edit(entidade.uuid)"
+									>
+										<app-icon icon="heroPencil" />
+									</button>
+								</div>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		} @else {
+			<div class="flex flex-col items-center w-full gap-16 sm:items-start fade-in">
+				<h2 class="f4">Carregando...</h2>
+			</div>
+		}
+	} @else {
+		<div class="flex flex-col items-center w-full gap-16 sm:items-start fade-in">
+			<h2 class="f4">Ops! :(</h2>
+		</div>
+	}
+</app-container-base>

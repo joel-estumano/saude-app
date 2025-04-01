@@ -168,7 +168,7 @@ export class FormUtils {
 	 * @returns Uma string formatada no formato "yyyy-MM-dd".
 	 * @throws Erro se a string não for válida.
 	 */
-	static formatDate(dateString: string): string {
+	static formatDateIn(dateString: string): string {
 		if (!dateString || dateString.length !== 8) {
 			throw new Error('A data deve estar no formato ddMMyyyy com exatamente 8 caracteres.');
 		}
@@ -184,6 +184,31 @@ export class FormUtils {
 
 		// Retorna a data no formato ISO "yyyy-MM-dd"
 		return `${year}-${month}-${day}`;
+	}
+
+	/**
+	 * Converte uma string de data no formato "yyyy-MM-dd" para "ddMMyyyy".
+	 *
+	 * @param dateString A data no formato "yyyy-MM-dd".
+	 * @returns Uma string formatada no formato "ddMMyyyy".
+	 * @throws Erro se a string não for válida.
+	 */
+	static formatDateOut(dateString: string): string {
+		if (!dateString || dateString.length !== 10) {
+			throw new Error('A data deve estar no formato yyyy-MM-dd com exatamente 10 caracteres.');
+		}
+
+		const year = dateString.substring(0, 4);
+		const month = dateString.substring(5, 7);
+		const day = dateString.substring(8, 10);
+
+		// Validação básica para garantir valores numéricos
+		if (isNaN(+day) || isNaN(+month) || isNaN(+year)) {
+			throw new Error('A data contém valores inválidos. Certifique-se de que está no formato yyyy-MM-dd.');
+		}
+
+		// Retorna a data no formato "ddMMyyyy"
+		return `${day}${month}${year}`;
 	}
 
 	static listFormErrors(form: FormGroup): { field: string; errors: string[] }[] {

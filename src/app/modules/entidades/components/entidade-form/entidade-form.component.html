@@ -1,0 +1,90 @@
+@if (!this.erro()) {
+	@if (data$ | async; as data) {
+		<form class="flex flex-col gap-10 fade-in" [formGroup]="form" (ngSubmit)="submit()">
+			<div class="grid gap-5">
+				<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+					<div>
+						<label for="cnpj">CNPJ</label>
+						<input
+							type="text"
+							formControlName="cnpj"
+							placeholder="00.000.000/0000-00"
+							[ngClass]="formUtils.invalidClass(formUtils.getControl(form, 'cnpj'), this.isFormSubmited())"
+							mask="00.000.000/0000-00"
+							[dropSpecialCharacters]="false"
+						/>
+					</div>
+					<div>
+						<label for="regional_id">Regional</label>
+						<app-selector
+							formControlName="regional_id"
+							[items]="data.regionais"
+							[ngClass]="formUtils.invalidClass(formUtils.getControl(form, 'regional_id'), this.isFormSubmited())"
+						></app-selector>
+					</div>
+					<div>
+						<label for="especialidades">Especialidades</label>
+						<app-multi-selector
+							formControlName="especialidades"
+							[items]="data.especialidades"
+							[ngClass]="formUtils.invalidClass(formUtils.getControl(form, 'especialidades'), this.isFormSubmited())"
+						></app-multi-selector>
+					</div>
+				</div>
+				<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+					<div>
+						<label for="razao_social">Razao Social</label>
+						<input
+							type="text"
+							formControlName="razao_social"
+							placeholder="Ex.: Razao Social S/A"
+							[ngClass]="formUtils.invalidClass(formUtils.getControl(form, 'razao_social'), this.isFormSubmited())"
+						/>
+					</div>
+					<div>
+						<label for="nome_fantasia">Nome Fantasia</label>
+						<input
+							type="text"
+							formControlName="nome_fantasia"
+							placeholder="Ex.: Fantasia"
+							[ngClass]="formUtils.invalidClass(formUtils.getControl(form, 'nome_fantasia'), this.isFormSubmited())"
+						/>
+					</div>
+				</div>
+				<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+					<div class="col-span-2">
+						<label for="data_inauguracao">Data de Inauguração</label>
+						<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+							<input
+								type="text"
+								formControlName="data_inauguracao"
+								placeholder="00/00/0000"
+								[ngClass]="formUtils.invalidClass(formUtils.getControl(form, 'data_inauguracao'), this.isFormSubmited())"
+								mask="00/00/0000"
+							/>
+							<label for="ativa" class="checkbox-label" title="Ativa">
+								<input id="ativa" type="checkbox" formControlName="ativa" class="checkbox" />
+								Ativa
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="inline-flex justify-end gap-5">
+				<button class="default" title="Cancelar" (click)="cancel()">Cancelar</button>
+				<button class="default" [title]="isEdit() ? 'Editar' : 'Salvar'" type="submit" [disabled]="this.isLoading()">
+					{{ isLoading() | action: isEdit() }}
+				</button>
+			</div>
+		</form>
+	} @else {
+		<div class="flex flex-col items-center w-full gap-16 sm:items-start fade-in">
+			<h2 class="f4">Carregando...</h2>
+		</div>
+	}
+} @else {
+	<div class="flex flex-col items-center w-full gap-16 sm:items-start fade-in">
+		<h2 class="f4">Ops! :(</h2>
+		<button class="default" title="Tentar novamente" (click)="reloadData()">Tentar novamente</button>
+	</div>
+}

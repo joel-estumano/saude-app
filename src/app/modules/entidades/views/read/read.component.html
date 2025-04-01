@@ -1,0 +1,56 @@
+<app-container-base>
+	@if (!this.erro()) {
+		@if (entidade$ | async; as entidade) {
+			<div class="flex flex-col gap-16">
+				<div class="flex flex-col items-center justify-between sm:flex-row max-sm:flex-col">
+					<h2 class="f2">Visualizar Entidade</h2>
+					<button class="default" title="Editar Entidade" (click)="editar(entidade.uuid)">Editar</button>
+				</div>
+				<div class="block w-full">
+					<div class="grid grid-rows-3 gap-5">
+						<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+							<div class="flex flex-col">
+								<p class="font-semibold">Nome Fantasia</p>
+								<p>{{ entidade.nome_fantasia }}</p>
+							</div>
+							<div class="flex flex-col">
+								<p class="font-semibold">Razão Social</p>
+								<p>{{ entidade.razao_social }}</p>
+							</div>
+							<div class="flex flex-col">
+								<p class="font-semibold">CNPJ</p>
+								<p>{{ entidade.cnpj }}</p>
+							</div>
+						</div>
+						<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+							<div class="flex flex-col">
+								<p class="font-semibold">Especialidades</p>
+								<p>{{ entidade.especialidades }}</p>
+							</div>
+							<div class="flex flex-col">
+								<p class="font-semibold">Regional</p>
+								<p>{{ entidade.regional_id }}</p>
+							</div>
+							<div class="flex flex-col">
+								<p class="font-semibold">Data de Inauguração</p>
+								<p>{{ entidade.data_inauguracao | date: "dd/MM/yyyy" }}</p>
+							</div>
+						</div>
+						<div></div>
+					</div>
+					<div class="inline-flex justify-end w-full gap-5">
+						<button class="default" title="Voltar" (click)="cancel()">Voltar</button>
+					</div>
+				</div>
+			</div>
+		} @else {
+			<div class="flex flex-col items-center w-full gap-16 sm:items-start fade-in">
+				<h2 class="f4">Carregando...</h2>
+			</div>
+		}
+	} @else {
+		<div class="flex flex-col items-center w-full gap-16 sm:items-start fade-in">
+			<h2 class="f4">Ops! :(</h2>
+		</div>
+	}
+</app-container-base>

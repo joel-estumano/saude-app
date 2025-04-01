@@ -1,0 +1,21 @@
+<div class="multi-selector">
+	<!-- Botão Toggle -->
+	<!-- Este botão abre/fecha o menu dropdown -->
+	<button class="relative multi-selector-toggle" (click)="toggleMenu()" type="button" [ngClass]="ngClass()">
+		<span class="line-clamp-1">{{ getSelectedLabel() || "Selecione" }}</span>
+		<app-icon [icon]="isOpen() ? 'heroChevronUp' : 'heroChevronDown'" class="absolute inset-y-0 right-2" />
+	</button>
+
+	<!-- Menu Dropdown -->
+	<!-- Esta seção contém as opções disponíveis -->
+	<div [class.open]="isOpen()" class="multi-selector-menu">
+		<!-- Iteração sobre os itens para criar os rótulos -->
+		@for (item of items(); track item[selectionKey()]) {
+			<!-- O clique no rótulo seleciona o item diretamente -->
+			<label class="multi-selector-item">
+				<input type="checkbox" [checked]="checkedValues()(item)" (change)="toggleSelection(item)" />
+				<span>{{ item[label()] }}</span>
+			</label>
+		}
+	</div>
+</div>

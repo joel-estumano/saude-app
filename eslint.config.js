@@ -40,6 +40,6 @@ module.exports = tseslint.config(
 		rules: {}
 	},
 	{
-		ignores: [".angular/"]
+		ignores: [".angular/", "src/environments"]
 	}
 );
