@@ -2,11 +2,12 @@ import { AlertService } from '../services/alert/alert.service';
 import { AuthService } from '../modules/auth/services/auth.service';
 import { Component, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
+import { ProgressBarComponent } from '../shared/progress-bar/progress-bar.component';
 
 @Component({
 	selector: 'app-layout',
 	standalone: true,
-	imports: [RouterOutlet],
+	imports: [RouterOutlet, ProgressBarComponent],
 	templateUrl: './layout.component.html'
 })
 export class LayoutComponent {

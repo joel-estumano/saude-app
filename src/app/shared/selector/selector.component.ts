@@ -1,4 +1,4 @@
-import { Component, computed, forwardRef, HostListener, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, forwardRef, HostListener, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { IconComponent } from '../icon/icon.component';
@@ -20,7 +20,8 @@ import { IconComponent } from '../icon/icon.component';
 			useExisting: forwardRef(() => SelectorComponent), // Referência ao próprio componente
 			multi: true // Permite múltiplos provedores
 		}
-	]
+	],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectorComponent<T, K extends keyof T> implements ControlValueAccessor {
 	/**
@@ -34,6 +35,12 @@ export class SelectorComponent<T, K extends keyof T> implements ControlValueAcce
 	 * Exemplo: 'nome', 'descricao'.
 	 */
 	label = input<K>('label' as K);
+
+	/**
+	 * Indica se o item está desabilitado.
+	 * Aceita um valor booleano. O padrão é `false`.
+	 */
+	isLoading = input<boolean>(false);
 
 	/**
 	 * Classe CSS dinâmica para estilização.

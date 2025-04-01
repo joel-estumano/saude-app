@@ -1,7 +1,7 @@
 <div class="selector">
 	<!-- Botão Toggle -->
 	<!-- Este botão abre/fecha o menu dropdown -->
-	<button class="relative selector-toggle" (click)="toggleMenu()" type="button" [ngClass]="ngClass()">
+	<button class="relative selector-toggle" (click)="toggleMenu()" type="button" [ngClass]="ngClass()" [disabled]="isLoading()">
 		<span class="line-clamp-1">{{ getSelectedLabel() || "Selecione" }}</span>
 		<app-icon [icon]="isOpen() ? 'heroChevronUp' : 'heroChevronDown'" class="absolute inset-y-0 right-2" />
 	</button>

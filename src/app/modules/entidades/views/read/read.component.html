@@ -2,12 +2,12 @@
 	@if (!this.erro()) {
 		@if (entidade$ | async; as entidade) {
 			<div class="flex flex-col gap-16">
-				<div class="flex flex-col items-center justify-between sm:flex-row max-sm:flex-col">
+				<div class="flex items-center justify-between gap-8 sm:flex-row max-sm:flex-col-reverse">
 					<h2 class="f2">Visualizar Entidade</h2>
-					<button class="default" title="Editar Entidade" (click)="editar(entidade.uuid)">Editar</button>
+					<button type="button" class="default" title="Editar Entidade" (click)="editar(entidade.uuid)">Editar</button>
 				</div>
 				<div class="block w-full">
-					<div class="grid grid-rows-3 gap-5">
+					<div class="flex flex-col gap-16">
 						<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
 							<div class="flex flex-col">
 								<p class="font-semibold">Nome Fantasia</p>
@@ -25,21 +25,47 @@
 						<div class="grid grid-cols-1 gap-5 md:grid-cols-3">
 							<div class="flex flex-col">
 								<p class="font-semibold">Especialidades</p>
-								<p>{{ entidade.especialidades }}</p>
+								<ul class="space-y-2 text-sm">
+									<!-- Renderiza até os 5 primeiros itens -->
+									@for (especialidade of entidade.especialidades.slice(0, 5); track $index) {
+										<li>
+											<p>{{ especialidade.label }}</p>
+										</li>
+									}
+
+									<!-- Verifica se há mais de 5 itens e exibe o botão -->
+									@if (entidade.especialidades.length > 5) {
+										<li class="">
+											<button type="button" title="Ver todos" class="inline-flex gap-1 text-primary" (click)="openModal(entidade)">
+												Mais {{ entidade.especialidades.length - 5 }}
+												<app-icon icon="heroListBullet" class="text-xl" />
+											</button>
+										</li>
+									}
+								</ul>
 							</div>
 							<div class="flex flex-col">
 								<p class="font-semibold">Regional</p>
-								<p>{{ entidade.regional_id }}</p>
+								<p>{{ entidade.regional.label }}</p>
 							</div>
 							<div class="flex flex-col">
 								<p class="font-semibold">Data de Inauguração</p>
 								<p>{{ entidade.data_inauguracao | date: "dd/MM/yyyy" }}</p>
 							</div>
 						</div>
-						<div></div>
+						<div class="grid">
+							<div class="inline-flex items-center gap-1">
+								<p class="font-semibold">Ativa</p>
+								<app-icon
+									class="w-8 h-8 text-2xl shrink-0"
+									[icon]="entidade.ativa ? 'heroCheck' : 'heroMinus'"
+									[ngClass]="entidade.ativa ? 'text-success' : 'text-destructive'"
+								/>
+							</div>
+						</div>
 					</div>
 					<div class="inline-flex justify-end w-full gap-5">
-						<button class="default" title="Voltar" (click)="cancel()">Voltar</button>
+						<button type="button" class="default" title="Voltar" (click)="cancel()">Voltar</button>
 					</div>
 				</div>
 			</div>

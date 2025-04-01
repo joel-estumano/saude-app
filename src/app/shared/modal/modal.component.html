@@ -1,0 +1,8 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[1080] max-sm:p-4" [class.hidden]="!this.isVisible()">
+	<div class="relative w-full max-w-lg p-6 bg-white rounded shadow-lg">
+		<ng-container #modalContent></ng-container>
+		<button type="button" title="Fechar" class="absolute w-8 h-8 text-2xl text-gray-500 top-2 right-2 shrink-0" (click)="close()">
+			<app-icon icon="heroXMark" />
+		</button>
+	</div>
+</div>

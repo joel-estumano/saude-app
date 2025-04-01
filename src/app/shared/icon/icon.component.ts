@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import * as heroiconsRegular from '@ng-icons/heroicons/outline';
 import * as heroiconsSolid from '@ng-icons/heroicons/solid';
@@ -16,7 +16,8 @@ const mergeIcons = {
 	imports: [NgIconComponent],
 	providers: [provideIcons(mergeIcons)],
 	templateUrl: './icon.component.html',
-	styleUrl: './icon.component.scss'
+	styleUrl: './icon.component.scss',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconComponent {
 	icon = input<IconName>();
