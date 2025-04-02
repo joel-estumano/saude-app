@@ -50,4 +50,9 @@ export class ListComponent {
 	edit(uuid: string): void {
 		this.router.navigate(['editar', uuid]);
 	}
+
+	onPageChanged(page: number) {
+		// Busca dados para a nova página
+		console.log(page);
+	}
 }

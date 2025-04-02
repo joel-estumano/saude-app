@@ -4,7 +4,7 @@
 			<div class="flex flex-col gap-16">
 				<div class="flex items-center justify-between gap-8 sm:flex-row max-sm:flex-col-reverse">
 					<h2 class="f2">Visualizar Entidade</h2>
-					<button type="button" class="default" title="Editar Entidade" (click)="editar(entidade.uuid)">Editar</button>
+					<button type="button" class="max-sm:w-full default" title="Editar Entidade" (click)="editar(entidade.uuid)">Editar</button>
 				</div>
 				<div class="block w-full">
 					<div class="flex flex-col gap-16">
@@ -36,9 +36,14 @@
 									<!-- Verifica se há mais de 5 itens e exibe o botão -->
 									@if (entidade.especialidades.length > 5) {
 										<li class="">
-											<button type="button" title="Ver todos" class="inline-flex gap-1 text-primary" (click)="openModal(entidade)">
-												Mais {{ entidade.especialidades.length - 5 }}
+											<button
+												type="button"
+												title="Ver todos"
+												class="inline-flex gap-1 font-semibold text-primary"
+												(click)="openModal(entidade)"
+											>
 												<app-icon icon="heroListBullet" class="text-xl" />
+												Mais {{ entidade.especialidades.length - 5 }}
 											</button>
 										</li>
 									}
@@ -64,9 +69,9 @@
 							</div>
 						</div>
 					</div>
-					<div class="inline-flex justify-end w-full gap-5">
-						<button type="button" class="default" title="Voltar" (click)="cancel()">Voltar</button>
-					</div>
+				</div>
+				<div class="inline-flex justify-end w-full gap-5">
+					<button type="button" class="max-sm:w-full default" title="Voltar" (click)="cancel()">Voltar</button>
 				</div>
 			</div>
 		} @else {

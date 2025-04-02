@@ -8,7 +8,7 @@ import {
 	withInMemoryScrolling
 } from '@angular/router';
 import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
+// import { provideClientHydration } from '@angular/platform-browser';
 import { CustomTitleStrategy } from './strategies/title.strategy';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 
@@ -16,6 +16,7 @@ import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
 import { httpInterceptorProviders } from './modules/auth/interceptors';
 import { NgxWebstorageModule } from 'ngx-webstorage';
+import { provideStore } from '@ngrx/store';
 registerLocaleData(ptBr);
 
 const scrollConfig: InMemoryScrollingOptions = {
@@ -29,7 +30,7 @@ export const appConfig: ApplicationConfig = {
 	providers: [
 		provideZoneChangeDetection({ eventCoalescing: true }),
 		provideRouter(routes, inMemoryScrollingFeature, withComponentInputBinding()),
-		provideClientHydration(),
+		// provideClientHydration(),
 		provideHttpClient(withFetch(), withInterceptors(httpInterceptorProviders)),
 		{ provide: LOCALE_ID, useValue: 'pt-BR' },
 		{ provide: TitleStrategy, useClass: CustomTitleStrategy },
@@ -38,6 +39,7 @@ export const appConfig: ApplicationConfig = {
 				prefix: 'saude-app',
 				separator: '-'
 			})
-		])
+		]),
+		provideStore({})
 	]
 };

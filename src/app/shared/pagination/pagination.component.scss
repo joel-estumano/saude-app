@@ -1,0 +1,15 @@
+.pagination {
+	@apply flex gap-1.5 justify-center;
+}
+
+.pagination-button {
+	@apply cursor-pointer rounded-none text-sm border px-3 py-1.5;
+}
+
+.pagination-button:disabled {
+	@apply bg-muted cursor-not-allowed;
+}
+
+.pagination-button.active {
+	@apply bg-primary text-white border border-primary;
+}
