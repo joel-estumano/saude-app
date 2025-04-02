@@ -72,7 +72,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="inline-flex justify-end gap-5">
+			<div class="grid grid-cols-2 gap-5 sm:inline-flex sm:justify-end">
 				<button type="button" class="default" title="Cancelar" [disabled]="this.isLoading()" (click)="cancel()">Cancelar</button>
 				<button type="submit" class="primary" [title]="isEdit() ? 'Editar' : 'Salvar'" [disabled]="this.isLoading()">
 					{{ isLoading() | textActionSubmit: isEdit() }}

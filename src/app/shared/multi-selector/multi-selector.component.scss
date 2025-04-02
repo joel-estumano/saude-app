@@ -6,7 +6,7 @@
 
 /* Botão de alternância para abrir/fechar o menu */
 .multi-selector-toggle {
-	/* Estilo visual básico: fundo, borda arredondada, tamanho e alinhamento */
+	/* Estilo visual básico: fundo, borda reta, tamanho e alinhamento */
 	@apply bg-background border rounded-none py-2 px-3 w-full text-left text-sm cursor-pointer disabled:cursor-default;
 
 	/* Adiciona efeitos de foco para indicar interatividade ao usuário */

@@ -13,11 +13,13 @@ import { ModalReadEspecialidadesComponent } from './components/modal-read-especi
 import { MultiSelectorComponent } from 'src/app/shared/multi-selector/multi-selector.component';
 import { NgModule } from '@angular/core';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { ReadComponent } from './views/read/read.component';
 import { RegionaisModule } from '../regionais/regionais.module';
 import { RouterModule, Routes } from '@angular/router';
 import { SelectorComponent } from 'src/app/shared/selector/selector.component';
-import { TextActionSubmitPipe } from './pipes/text-action-submit.pipe';
+import { TextActionSubmitPipe } from './pipes/text-action-submit/text-action-submit.pipe';
+import { TextEspecialidadesPipe } from './pipes/text-especialidades/text-especialidades.pipe';
 
 const routes: Routes = [
 	{ path: 'list', component: ListComponent },
@@ -35,6 +37,7 @@ const routes: Routes = [
 		ReadComponent,
 		EntidadeFormComponent,
 		TextActionSubmitPipe,
+		TextEspecialidadesPipe,
 		ModalConfirmRemoveComponent,
 		ModalReadEspecialidadesComponent
 	],
@@ -50,7 +53,8 @@ const routes: Routes = [
 		NgxMaskDirective,
 		SelectorComponent,
 		MultiSelectorComponent,
-		IconComponent
+		IconComponent,
+		PaginationComponent
 	],
 	providers: [EntidadesService, provideNgxMask()]
 })

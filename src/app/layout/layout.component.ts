@@ -24,7 +24,7 @@ export class LayoutComponent {
 				this.router.navigate(['/login']);
 			},
 			error: () => {
-				this.alertService.add('error', 'Erro ao sair'); // Adiciona mensagem de erro ao serviço de alertas
+				this.alertService.add('error', 'Erro ao sair').subscribe(); // Adiciona mensagem de erro ao serviço de alertas
 				this.isLoading.set(false);
 			},
 			complete: () => {
