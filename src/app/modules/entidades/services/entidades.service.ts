@@ -71,18 +71,27 @@ export class EntidadesService {
 		return this.httpService.delete<void>(`entidades/${uuid}`).pipe(map(() => undefined)); // Retorna um Observable vazio
 	}
 
-	/* list(filters: IEntidadesPaginationFilters): Observable<IEntidadesPaginationData> {
-		return this.httpService
-			.get<{ data: IEntidadesPaginationData }>(`entidades?page=${filters.page}&per_page=${filters.per_page}&text=${filters.text}`)
-			.pipe(map((res) => res.data));
-	} */
-
+	/**
+	 * Realiza uma requisição HTTP GET para obter uma lista paginada de entidades.
+	 * @param filters - Objeto contendo os seguintes filtros:
+	 *   - page (number): Número da página a ser retornada.
+	 *   - per_page (number): Quantidade de itens por página.
+	 *   - text (string): Texto para busca nas entidades.
+	 *   - sort_field (string | undefined): Campo a ser utilizado na ordenação (opcional).
+	 *   - sort_order ('asc' | 'desc' | undefined): Ordem de ordenação, sendo ascendente ('asc') ou descendente ('desc') (opcional).
+	 * @returns Observable<IEntidadesPaginationData> - Fluxo assíncrono contendo os dados paginados das entidades no formato esperado.
+	 */
 	list(filters: IEntidadesPaginationFilters): Observable<IEntidadesPaginationData> {
+		// Monta os parâmetros da query string com base nos filtros recebidos
 		const queryParams =
-			`page=${filters.page}&per_page=${filters.per_page}&text=${filters.text}` +
-			(filters.sort_field ? `&sort_field=${filters.sort_field}` : '') +
-			(filters.sort_order ? `&sort_order=${filters.sort_order}` : '');
+			`page=${filters.page}&per_page=${filters.per_page}&text=${filters.text}` + // Parâmetros de paginação e busca
+			(filters.sort_field ? `&sort_field=${filters.sort_field}` : '') + // Adiciona campo de ordenação, se presente
+			(filters.sort_order ? `&sort_order=${filters.sort_order}` : ''); // Adiciona ordem de ordenação, se presente
 
-		return this.httpService.get<{ data: IEntidadesPaginationData }>(`entidades?${queryParams}`).pipe(map((res) => res.data));
+		// Realiza a chamada HTTP GET para o endpoint 'entidades' e aplica transformações nos dados da resposta
+		return this.httpService.get<{ data: IEntidadesPaginationData }>(`entidades?${queryParams}`).pipe(
+			// Extrai os dados necessários do corpo da resposta HTTP
+			map((res) => res.data)
+		);
 	}
 }

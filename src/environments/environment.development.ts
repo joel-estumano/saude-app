@@ -7,7 +7,7 @@
  * - apiURL: URL base para acessar a API. Deve ser uma string representando o endpoint.
  */
 export const environment = {
-	clientId: 6, // O ID do cliente gerado pela API e utilizado para autenticação via OAuth
-	clientSecret: 's3jlOUrkZCMLLTbsq1EpzT5ped8s4tNaDd0fkgsH', // O segredo gerado pela API e utilizado para autenticação via OAuth
-	apiURL: 'api' // Substitua com o endpoint da API
+	clientId: 0, // O ID do cliente gerado pela API e utilizado para autenticação via OAuth
+	clientSecret: '', // O segredo gerado pela API e utilizado para autenticação via OAuth
+	apiURL: 'api' // Não precisa substituir
 };
