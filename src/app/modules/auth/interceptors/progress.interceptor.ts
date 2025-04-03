@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
-import { ProgressBarService } from 'src/app/services/progress-bar/progress-bar.service';
+import { ProgressBarService } from 'src/app/shared/progress-bar/services/progress-bar.service';
 
 export const progressInterceptor: HttpInterceptorFn = (req, next) => {
 	const progressService = inject(ProgressBarService);

@@ -1,4 +1,4 @@
-import { AlertService } from 'src/app/services/alert/alert.service';
+import { AlertService } from 'src/app/shared/alert/services/alert.service';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { Component, signal } from '@angular/core';
 import { environment } from 'src/environments/environment';
@@ -16,6 +16,7 @@ export class LoginComponent {
 	protected loginForm: FormGroup;
 	protected isFormSubmited = signal<boolean>(false);
 	protected isLoading = signal<boolean>(false);
+	protected showPassword = signal<boolean>(false);
 	protected formUtils = FormUtils;
 
 	constructor(
@@ -104,5 +105,9 @@ export class LoginComponent {
 			default:
 				return 'não autorizado!';
 		}
+	}
+
+	togglePasswordVisibility(state: boolean): void {
+		this.showPassword.set(state); // Define visibilidade enquanto pressionado
 	}
 }

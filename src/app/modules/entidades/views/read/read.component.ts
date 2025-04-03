@@ -1,12 +1,11 @@
-import { AlertService } from 'src/app/services/alert/alert.service';
-import { BaseComponent } from 'src/app/shared/base/base.component';
+import { AlertService } from 'src/app/shared/alert/services/alert.service';
 import { catchError, EMPTY, Observable, Subject, switchMap, takeUntil, of, startWith } from 'rxjs';
 import { Component, Input, signal, OnDestroy } from '@angular/core';
 import { EntidadesService } from '../../services/entidades.service';
 import { getEntidadeByUuid } from 'src/app/store/entidades/entidades.selectors';
 import { IEntidadeData } from '@interfaces';
 import { ModalReadEspecialidadesComponent } from '../../components/modal-read-especialidades/modal-read-especialidades.component';
-import { ModalService } from 'src/app/services/modal/modal.service';
+import { ModalService } from 'src/app/shared/modal/services/modal.service';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -15,7 +14,7 @@ import { Store } from '@ngrx/store';
 	templateUrl: './read.component.html',
 	styleUrl: './read.component.scss'
 })
-export class ReadComponent extends BaseComponent implements OnDestroy {
+export class ReadComponent implements OnDestroy {
 	uuid = signal<string>('');
 
 	entidade$!: Observable<IEntidadeData | null>;
@@ -37,9 +36,8 @@ export class ReadComponent extends BaseComponent implements OnDestroy {
 		private entidadesService: EntidadesService,
 		private modalService: ModalService,
 		private store: Store,
-		protected override alertService: AlertService
+		private alertService: AlertService
 	) {
-		super(alertService);
 		this.entidade$ = this.reloadTrigger$.pipe(
 			startWith(void 0),
 			switchMap(() => {
@@ -87,7 +85,6 @@ export class ReadComponent extends BaseComponent implements OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.alertService.clearAll();
 		this.destroy$.next();
 		this.destroy$.complete();
 	}

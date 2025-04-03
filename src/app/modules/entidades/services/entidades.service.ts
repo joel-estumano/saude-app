@@ -71,9 +71,18 @@ export class EntidadesService {
 		return this.httpService.delete<void>(`entidades/${uuid}`).pipe(map(() => undefined)); // Retorna um Observable vazio
 	}
 
-	list(filters: IEntidadesPaginationFilters): Observable<IEntidadesPaginationData> {
+	/* list(filters: IEntidadesPaginationFilters): Observable<IEntidadesPaginationData> {
 		return this.httpService
 			.get<{ data: IEntidadesPaginationData }>(`entidades?page=${filters.page}&per_page=${filters.per_page}&text=${filters.text}`)
 			.pipe(map((res) => res.data));
+	} */
+
+	list(filters: IEntidadesPaginationFilters): Observable<IEntidadesPaginationData> {
+		const queryParams =
+			`page=${filters.page}&per_page=${filters.per_page}&text=${filters.text}` +
+			(filters.sort_field ? `&sort_field=${filters.sort_field}` : '') +
+			(filters.sort_order ? `&sort_order=${filters.sort_order}` : '');
+
+		return this.httpService.get<{ data: IEntidadesPaginationData }>(`entidades?${queryParams}`).pipe(map((res) => res.data));
 	}
 }
