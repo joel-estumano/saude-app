@@ -3,8 +3,11 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 const state = createFeatureSelector<IEntidadesPaginationDataStore>('entidades');
 
-export const getEntidadesPagination = createSelector(state, (state: IEntidadesPaginationDataStore) => state);
+export const getEntidadesPaginationSelector = createSelector(state, (state: IEntidadesPaginationDataStore) => state);
 
-export const getAllEntidades = createSelector(getEntidadesPagination, (state: IEntidadesPaginationDataStore): IEntidadeData[] => state.data.data);
+export const getEntidadesSelector = createSelector(getEntidadesPaginationSelector, (state: IEntidadesPaginationDataStore): IEntidadeData[] => state.data.data);
 
-export const getEntidadeByUuid = (uuid: string) => createSelector(getAllEntidades, (entidades) => entidades.find((entidade) => entidade.uuid === uuid) || null);
+export const getEntidadeByUuidSelector = (uuid: string) =>
+	createSelector(getEntidadesSelector, (entidades) => entidades.find((entidade) => entidade.uuid === uuid) || null);
+
+export const getEntidadesErrorSelector = createSelector(getEntidadesPaginationSelector, (state: IEntidadesPaginationDataStore) => state.error);

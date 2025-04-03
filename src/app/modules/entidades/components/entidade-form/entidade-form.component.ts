@@ -85,7 +85,7 @@ export class EntidadeFormComponent implements OnInit {
 			map(({ regionais, especialidades }) => ({ regionais, especialidades })),
 			catchError((err) => {
 				this.erro.set(err || true);
-				this.alertService.send('error', 'Erro ao carregar dados!');
+				this.alertService.send('error', 'Ocorreu um erro inesperado!');
 				return of({ regionais: [], especialidades: [] });
 			})
 		);

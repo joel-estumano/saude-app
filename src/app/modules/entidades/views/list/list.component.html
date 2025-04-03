@@ -29,19 +29,19 @@
 			</div>
 		</div>
 
-		@if (entidadesPagination$ | async; as entidades) {
-			@if (entidades.isLoading) {
+		@if (entidadesPagination$ | async; as pagination) {
+			@if (pagination.isLoading) {
 				<div class="flex flex-col items-center w-full gap-16 fade-in">
 					<h2 class="f4">Carregando...</h2>
 				</div>
 			} @else {
-				@if (entidades.error) {
+				@if (pagination.error) {
 					<div class="flex flex-col items-center w-full gap-16 sm:items-start fade-in">
 						<h2 class="f4">Ops! :(</h2>
 					</div>
 				} @else {
 					<div class="block w-full fade-in">
-						@if (entidades.data.data.length) {
+						@if (pagination.data.data.length) {
 							<!-- cabeçalho da listagem -->
 							<div
 								class="hidden border border-accent bg-accent text-background sm:grid gap-4 px-4 py-2 sm:grid-cols-[2fr_1fr_2fr_1fr_1fr_1fr_auto] text-sm font-semibold"
@@ -52,7 +52,7 @@
 										type="button"
 										title="Ordenar"
 										class="text-lg"
-										[disabled]="entidades.isLoading"
+										[disabled]="pagination.isLoading"
 										(click)="manageOrderState('nomeFantasia')"
 									>
 										<app-icon [icon]="orderNomeFantasia().on | orderIcon: orderNomeFantasia().order"></app-icon>
@@ -64,7 +64,7 @@
 										type="button"
 										title="Ordenar"
 										class="text-lg"
-										[disabled]="entidades.isLoading"
+										[disabled]="pagination.isLoading"
 										(click)="manageOrderState('regional')"
 									>
 										<app-icon [icon]="orderRegional().on | orderIcon: orderRegional().order"></app-icon>
@@ -78,7 +78,7 @@
 										type="button"
 										title="Ordenar"
 										class="text-lg"
-										[disabled]="entidades.isLoading"
+										[disabled]="pagination.isLoading"
 										(click)="manageOrderState('created_at')"
 									>
 										<app-icon [icon]="orderCreatedAt().on | orderIcon: orderCreatedAt().order"></app-icon>
@@ -89,7 +89,7 @@
 							</div>
 							<!-- corpo da listagem -->
 							<ul class="border-x" role="table">
-								@for (entidade of entidades.data.data; track entidade.uuid; let idx = $index, o = $odd) {
+								@for (entidade of pagination.data.data; track entidade.uuid; let idx = $index, o = $odd) {
 									<li
 										role="row"
 										class="grid items-start grid-cols-1 gap-4 px-4 py-2 max-sm:first:border-t border-b sm:items-center sm:grid-cols-[2fr_1fr_2fr_1fr_1fr_1fr_auto] text-sm"
@@ -150,8 +150,8 @@
 							<!-- controles de paginação -->
 							<app-pagination
 								class="block mt-3"
-								[currentPage]="entidades.data.current_page"
-								[totalPages]="entidades.data.last_page"
+								[currentPage]="pagination.data.current_page"
+								[totalPages]="pagination.data.last_page"
 								(pageChanged)="filterByPage($event)"
 							>
 							</app-pagination>

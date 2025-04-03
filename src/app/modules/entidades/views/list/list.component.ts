@@ -1,8 +1,9 @@
+import { AlertService } from 'src/app/shared/alert/services/alert.service';
 import { Component, effect, OnDestroy, signal } from '@angular/core';
 import { debounceTime, distinctUntilChanged, map, skip, takeUntil } from 'rxjs/operators';
 import { EntidadeFiltersService } from '../../services/entidade-filters.service';
 import { FormControl } from '@angular/forms';
-import { getEntidadesPagination } from 'src/app/store/entidades/entidades.selectors';
+import { getEntidadesErrorSelector, getEntidadesPaginationSelector } from 'src/app/store/entidades/entidades.selectors';
 import { IEntidadesPaginationDataStore } from '@interfaces';
 import { loadEntidadesPagination } from 'src/app/store/entidades/entidades.actions';
 import { Observable, Subject } from 'rxjs';
@@ -16,8 +17,6 @@ import { Store } from '@ngrx/store';
 })
 export class ListComponent implements OnDestroy {
 	protected entidadesPagination$!: Observable<IEntidadesPaginationDataStore>;
-
-	protected erro = signal<Error | null>(null);
 
 	protected searchField = new FormControl<string>('');
 
@@ -40,10 +39,17 @@ export class ListComponent implements OnDestroy {
 
 	constructor(
 		private router: Router,
+		private alertService: AlertService,
 		private store: Store<{ entidades: IEntidadesPaginationDataStore }>,
 		private entidadeFiltersService: EntidadeFiltersService
 	) {
-		this.entidadesPagination$ = this.store.select(getEntidadesPagination);
+		this.entidadesPagination$ = this.store.select(getEntidadesPaginationSelector);
+
+		this.store.select(getEntidadesErrorSelector).subscribe((error) => {
+			if (error) {
+				alertService.send('error', 'Ocorreu um erro inesperado!');
+			}
+		});
 
 		this.entidadeFiltersService
 			.valueChanges$()
@@ -70,7 +76,7 @@ export class ListComponent implements OnDestroy {
 			});
 
 		this.store
-			.select(getEntidadesPagination)
+			.select(getEntidadesPaginationSelector)
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((paginationState) => {
 				if (paginationState.isLoading) {
@@ -84,17 +90,14 @@ export class ListComponent implements OnDestroy {
 			() => {
 				if (this.orderNomeFantasia().on) {
 					this.entidadeFiltersService.filterBySort('nome_fantasia', this.orderNomeFantasia().order);
-					//console.log(`Ordenação ativa: Nome Fantasia (${this.orderNomeFantasia().order})`);
 				} else if (this.orderRegional().on) {
 					this.entidadeFiltersService.filterBySort('regional', this.orderRegional().order);
-					//console.log(`Ordenação ativa: Região (${this.orderRegional().order})`);
 				} else if (this.orderCreatedAt().on) {
 					this.entidadeFiltersService.filterBySort('created_at', this.orderCreatedAt().order);
-					//console.log('Estado padrão: Data de Criação');
 				}
 			},
-			{ allowSignalWrites: true }
-		); // Habilita escrita de sinais dentro do effect
+			{ allowSignalWrites: true } // Habilita escrita de sinais dentro do effect
+		);
 	}
 
 	ngOnDestroy(): void {

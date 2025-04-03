@@ -2,7 +2,7 @@ import { AlertService } from 'src/app/shared/alert/services/alert.service';
 import { catchError, EMPTY, Observable, of, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { Component, Input, OnDestroy, signal } from '@angular/core';
 import { EntidadesService } from '../../services/entidades.service';
-import { getEntidadeByUuid } from 'src/app/store/entidades/entidades.selectors';
+import { getEntidadeByUuidSelector } from 'src/app/store/entidades/entidades.selectors';
 import { IEntidadeData } from '@interfaces';
 import { ModalConfirmRemoveComponent } from '../../components/modal-confirm-remove/modal-confirm-remove.component';
 import { ModalService } from 'src/app/shared/modal/services/modal.service';
@@ -48,10 +48,10 @@ export class EditComponent implements OnDestroy {
 					this.router.navigate(['list']);
 					return EMPTY;
 				}
-				return this.store.select(getEntidadeByUuid(currentUuid)).pipe(
+				return this.store.select(getEntidadeByUuidSelector(currentUuid)).pipe(
 					switchMap((entidade) => (entidade ? of(entidade) : this.entidadesService.read(currentUuid))),
 					catchError((error) => {
-						this.alertService.send('error', 'Erro ao carregar dados!');
+						this.alertService.send('error', 'Ocorreu um erro inesperado!');
 						this.erro.set(error);
 						return EMPTY;
 					})
