@@ -80,8 +80,12 @@
 			</div>
 		}
 	} @else {
-		<div class="flex flex-col items-center w-full gap-16 sm:items-start fade-in">
+		<div class="flex flex-col items-center justify-center w-full gap-16 fade-in">
 			<h2 class="f4">Ops! :(</h2>
+			<div class="flex flex-col justify-center w-full gap-5 sm:flex-row">
+				<button type="button" class="default" title="Tentar novamente" (click)="recarregar()">Tentar novamente</button>
+				<button type="button" class="max-sm:w-full default" title="Voltar" (click)="cancel()">Voltar</button>
+			</div>
 		</div>
 	}
 </app-container-base>

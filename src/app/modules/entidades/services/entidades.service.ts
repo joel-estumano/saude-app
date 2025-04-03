@@ -1,5 +1,5 @@
 import { HttpService } from 'src/app/services/http/http.service';
-import { EntidadeAddPayload, EntidadeData } from '@interfaces';
+import { IEntidadeAddPayload, IEntidadeData, IEntidadesPaginationData, IEntidadesPaginationFilters } from '@interfaces';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
@@ -27,8 +27,8 @@ export class EntidadesService {
 	 * @param data - Objeto contendo os dados da entidade a ser adicionada, conforme o tipo `IEntityAddPayload`.
 	 * @returns Observable contendo a resposta da API com os dados da entidade adicionada.
 	 */
-	add(data: EntidadeAddPayload): Observable<EntidadeData> {
-		return this.httpService.post<EntidadeAddPayload, { data: EntidadeData }>('entidades', data).pipe(map((res) => res.data));
+	add(data: IEntidadeAddPayload): Observable<IEntidadeData> {
+		return this.httpService.post<IEntidadeAddPayload, { data: IEntidadeData }>('entidades', data).pipe(map((res) => res.data));
 	}
 
 	/**
@@ -40,8 +40,8 @@ export class EntidadesService {
 	 * @param uuid - Identificador único da entidade (UUID).
 	 * @returns Observable contendo os dados da entidade no formato `EntidadeData`.
 	 */
-	read(uuid: string): Observable<EntidadeData> {
-		return this.httpService.get<{ data: EntidadeData }>(`entidades/${uuid}`).pipe(map((res) => res.data));
+	read(uuid: string): Observable<IEntidadeData> {
+		return this.httpService.get<{ data: IEntidadeData }>(`entidades/${uuid}`).pipe(map((res) => res.data));
 	}
 
 	/**
@@ -54,8 +54,8 @@ export class EntidadesService {
 	 * @param data - Objeto contendo os dados atualizados da entidade, conforme o tipo `EntidadeAddPayload`.
 	 * @returns Observable contendo os dados da entidade atualizada no formato `EntidadeData`.
 	 */
-	edit(uuid: string, data: EntidadeAddPayload): Observable<EntidadeData> {
-		return this.httpService.put<EntidadeAddPayload, { data: EntidadeData }>(`entidades/${uuid}`, data).pipe(map((res) => res.data));
+	edit(uuid: string, data: IEntidadeAddPayload): Observable<IEntidadeData> {
+		return this.httpService.put<IEntidadeAddPayload, { data: IEntidadeData }>(`entidades/${uuid}`, data).pipe(map((res) => res.data));
 	}
 
 	/**
@@ -71,7 +71,9 @@ export class EntidadesService {
 		return this.httpService.delete<void>(`entidades/${uuid}`).pipe(map(() => undefined)); // Retorna um Observable vazio
 	}
 
-	list(): Observable<{ data: { data: EntidadeData[] } }> {
-		return this.httpService.get('entidades');
+	list(filters: IEntidadesPaginationFilters): Observable<IEntidadesPaginationData> {
+		return this.httpService
+			.get<{ data: IEntidadesPaginationData }>(`entidades?page=${filters.page}&per_page=${filters.per_page}&text=${filters.text}`)
+			.pipe(map((res) => res.data));
 	}
 }

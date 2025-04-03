@@ -1,42 +1,79 @@
-import { Component, signal } from '@angular/core';
-import { EntidadeData } from '@interfaces';
-import { EntidadesService } from '../../services/entidades.service';
-import { debounceTime, distinctUntilChanged, filter, map, Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, signal } from '@angular/core';
+import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
+import { EntidadeFiltersService } from '../../services/entidade-filters.service';
 import { FormControl } from '@angular/forms';
+import { getEntidadesPagination } from 'src/app/store/entidades/entidades.selectors';
+import { IEntidadesPaginationDataStore } from '@interfaces';
+import { loadEntidadesPagination } from 'src/app/store/entidades/entidades.actions';
+import { Observable, Subject } from 'rxjs';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 @Component({
 	selector: 'app-list',
 	templateUrl: './list.component.html',
-	styleUrl: './list.component.scss'
+	styleUrls: ['./list.component.scss']
 })
-export class ListComponent {
-	entidades$!: Observable<EntidadeData[]>;
+export class ListComponent implements OnDestroy {
+	protected entidadesPagination$!: Observable<IEntidadesPaginationDataStore>;
 
 	protected erro = signal<Error | null>(null);
 
 	protected searchField = new FormControl<string>('');
 
+	private destroy$ = new Subject<void>();
+
 	constructor(
 		private router: Router,
-		private entidadesService: EntidadesService
+		private store: Store<{ entidades: IEntidadesPaginationDataStore }>,
+		private entidadeFiltersService: EntidadeFiltersService
 	) {
-		this.entidades$ = this.entidadesService.list().pipe(map((res) => res.data.data));
+		this.entidadesPagination$ = this.store.select(getEntidadesPagination);
+
+		this.entidadeFiltersService
+			.valueChanges$()
+			.pipe(
+				distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+				takeUntil(this.destroy$)
+			)
+			.subscribe((filters) => {
+				this.store.dispatch(loadEntidadesPagination(filters));
+			});
 
 		this.searchField.valueChanges
 			.pipe(
-				map((value: string | null) => value?.trim() || ''), // Garante que o valor seja uma string trimada ou vazio
-				filter((value: string) => value.length > 0), // Filtra valores com comprimento maior que 0
-				distinctUntilChanged(), // Compara diretamente strings para garantir mudanças
-				debounceTime(500) // Introduz um atraso de 500ms após a última mudança
+				map((value: string | null) => value?.trim() || ''),
+				distinctUntilChanged(),
+				debounceTime(500),
+				takeUntil(this.destroy$)
 			)
 			.subscribe((searchTerm: string) => {
-				console.log('searchTerm: ', searchTerm);
-				/* if (searchTerm !== this.lastSearch.title) {
-              this.lastSearch = { title: searchTerm }; // Atualiza o último termo de busca
-              console.log('Nova pesquisa:', searchTerm);
-            } */
+				this.filterByText(searchTerm);
 			});
+
+		this.store
+			.select(getEntidadesPagination)
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((paginationState) => {
+				if (paginationState.isLoading) {
+					this.searchField.disable();
+				} else {
+					this.searchField.enable();
+				}
+			});
+	}
+
+	ngOnDestroy(): void {
+		this.destroy$.next();
+		this.destroy$.complete();
+	}
+
+	filterByText(text: string): void {
+		this.entidadeFiltersService.filterByText(text);
+	}
+
+	filterByPage(page: number): void {
+		this.entidadeFiltersService.filterByPage(page);
 	}
 
 	add(): void {
@@ -49,10 +86,5 @@ export class ListComponent {
 
 	edit(uuid: string): void {
 		this.router.navigate(['editar', uuid]);
-	}
-
-	onPageChanged(page: number) {
-		// Busca dados para a nova página
-		console.log(page);
 	}
 }

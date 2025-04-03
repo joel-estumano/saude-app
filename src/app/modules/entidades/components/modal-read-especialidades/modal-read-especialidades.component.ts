@@ -10,7 +10,6 @@ import { IEspecialidadeData } from '@interfaces';
 export class ModalReadEspecialidadesComponent {
 	especialidades = signal<IEspecialidadeData[] | undefined>(undefined);
 
-	close() {
-		throw new Error('Method not implemented.');
-	}
+	/* eslint-disable @typescript-eslint/no-empty-function */
+	close() {}
 }

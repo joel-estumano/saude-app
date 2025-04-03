@@ -57,11 +57,10 @@ export class LoginComponent {
 					this.router.navigate(['/']); // Redireciona para a rota principal em caso de sucesso
 				},
 				error: (err) => {
-					this.alertService.add('error', this.loginErrorFeedback(err.error)).subscribe(() => {
-						this.loginForm.enable(); // Reabilita o formulário para edição
-						this.isLoading.set(false);
-						this.isFormSubmited.set(false);
-					}); // Adiciona mensagem de erro ao serviço de alertas
+					this.alertService.send('error', this.loginErrorFeedback(err.error));
+					this.loginForm.enable(); // Reabilita o formulário para edição
+					this.isLoading.set(false);
+					this.isFormSubmited.set(false); // Adiciona mensagem de erro ao serviço de alertas
 				},
 				complete: () => {
 					this.loginForm.enable(); // Reabilita o formulário
@@ -94,7 +93,7 @@ export class LoginComponent {
 		});
 		// Itera sobre os erros encontrados e exibe mensagens de alerta
 		erros.forEach((element) => {
-			this.alertService.add('error', `${element.field} ${element.errors.join(', ')}.`).subscribe();
+			this.alertService.send('error', `${element.field} ${element.errors.join(', ')}.`);
 		});
 	}
 

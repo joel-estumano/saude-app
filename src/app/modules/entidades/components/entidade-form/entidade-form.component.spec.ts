@@ -4,6 +4,7 @@ import { EntidadesModule } from '../../entidades.module';
 import { RegionaisService } from 'src/app/modules/regionais/services/regionais.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
+import { Store } from '@ngrx/store';
 
 describe('EntidadeFormComponent', () => {
 	let component: EntidadeFormComponent;
@@ -12,7 +13,7 @@ describe('EntidadeFormComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [EntidadesModule],
-			providers: [RegionaisService, provideHttpClient(), provideHttpClientTesting()]
+			providers: [RegionaisService, provideHttpClient(), provideHttpClientTesting(), { provide: Store, useValue: {} }]
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(EntidadeFormComponent);

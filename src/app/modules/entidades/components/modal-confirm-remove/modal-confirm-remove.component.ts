@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { EntidadeData } from '@interfaces';
+import { IEntidadeData } from '@interfaces';
 
 @Component({
 	selector: 'app-modal-confirm-remove',
@@ -9,7 +9,7 @@ import { EntidadeData } from '@interfaces';
 })
 export class ModalConfirmRemoveComponent {
 	isLoading = signal<boolean>(false);
-	entidade = signal<EntidadeData | undefined>(undefined);
+	entidade = signal<IEntidadeData | undefined>(undefined);
 
 	/* eslint-disable @typescript-eslint/no-empty-function */
 	confirm() {}

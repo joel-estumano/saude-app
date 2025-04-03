@@ -1,68 +1,99 @@
-import { Component, Input, OnDestroy, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { EntidadeData } from '@interfaces';
-import { Observable } from 'rxjs';
-import { EntidadesService } from '../../services/entidades.service';
-import { ModalService } from 'src/app/services/modal/modal.service';
-import { ModalConfirmRemoveComponent } from '../../components/modal-confirm-remove/modal-confirm-remove.component';
 import { AlertService } from 'src/app/services/alert/alert.service';
+import { BaseComponent } from 'src/app/shared/base/base.component';
+import { catchError, EMPTY, Observable, of, startWith, Subject, switchMap, takeUntil } from 'rxjs';
+import { Component, Input, OnDestroy, signal } from '@angular/core';
+import { EntidadesService } from '../../services/entidades.service';
+import { getEntidadeByUuid } from 'src/app/store/entidades/entidades.selectors';
+import { IEntidadeData } from '@interfaces';
+import { ModalConfirmRemoveComponent } from '../../components/modal-confirm-remove/modal-confirm-remove.component';
+import { ModalService } from 'src/app/services/modal/modal.service';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 @Component({
 	selector: 'app-edit',
 	templateUrl: './edit.component.html',
 	styleUrl: './edit.component.scss'
 })
-export class EditComponent implements OnDestroy {
-	entidade$!: Observable<EntidadeData>;
+export class EditComponent extends BaseComponent implements OnDestroy {
+	uuid = signal<string>('');
+
+	entidade$!: Observable<IEntidadeData>;
 
 	protected erro = signal<Error | null>(null);
 
 	protected formIsDisabled = signal<boolean>(false);
 
+	private reloadTrigger$ = new Subject<void>();
+
+	private destroy$ = new Subject<void>();
+
 	@Input({ required: true })
 	set id(id: string) {
-		this.loadData(id);
+		this.uuid.set(id);
+		this.reloadTrigger$.next();
 	}
 
 	constructor(
 		private router: Router,
 		private entidadesService: EntidadesService,
-		private alertService: AlertService,
-		private modalService: ModalService
-	) {}
-
-	private loadData(id: string): void {
-		this.entidade$ = this.entidadesService.read(id);
+		private modalService: ModalService,
+		private store: Store,
+		protected override alertService: AlertService
+	) {
+		super(alertService);
+		this.entidade$ = this.reloadTrigger$.pipe(
+			startWith(void 0),
+			switchMap(() => {
+				const currentUuid = this.uuid();
+				if (!currentUuid) {
+					this.router.navigate(['list']);
+					return EMPTY;
+				}
+				return this.store.select(getEntidadeByUuid(currentUuid)).pipe(
+					switchMap((entidade) => (entidade ? of(entidade) : this.entidadesService.read(currentUuid))),
+					catchError((error) => {
+						this.alertService.send('error', 'Erro ao carregar dados!');
+						this.erro.set(error);
+						return EMPTY;
+					})
+				);
+			}),
+			takeUntil(this.destroy$)
+		);
 	}
 
-	remove(entidade: EntidadeData): void {
+	recarregar(): void {
+		this.erro.set(null);
+		this.reloadTrigger$.next();
+	}
+
+	remove(entidade: IEntidadeData): void {
 		this.openModal(entidade);
 	}
 
 	cancel(): void {
-		this.router.navigate(['/']);
+		this.router.navigate(['list']);
 	}
 
-	private openModal(entidade: EntidadeData): void {
+	private openModal(entidade: IEntidadeData): void {
 		this.modalService.open(ModalConfirmRemoveComponent);
 		const instance = this.modalService.getInstance<ModalConfirmRemoveComponent>();
 		if (instance) {
 			instance.entidade.set(entidade);
-			// Sobrescreve o método confirm
+
 			instance.confirm = () => {
 				instance.isLoading.set(true);
 
 				this.entidadesService.remove(entidade.uuid).subscribe({
 					next: () => {
-						this.alertService.add('success', 'Operação realizada com sucesso!', 1500).subscribe(() => {
-							this.modalService.close();
-							this.router.navigate(['list']);
-						});
+						this.modalService.close();
+						this.alertService.send('success', 'Operação realizada com sucesso!');
+						this.router.navigate(['list']);
 					},
 					error: () => {
-						this.alertService.add('error', 'Falha ao excluir entidade!', 1500).subscribe(() => {
-							this.modalService.close();
-						});
+						this.modalService.close();
+						this.alertService.send('error', 'Falha ao excluir entidade!');
 					},
 					complete: () => {
 						instance.isLoading.set(false);
@@ -70,7 +101,6 @@ export class EditComponent implements OnDestroy {
 				});
 			};
 
-			// Sobrescreve o método cancel
 			instance.cancel = () => {
 				this.modalService.close();
 			};
@@ -78,6 +108,7 @@ export class EditComponent implements OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.alertService.clearAll();
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

@@ -17,6 +17,13 @@ import ptBr from '@angular/common/locales/pt';
 import { httpInterceptorProviders } from './modules/auth/interceptors';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import { provideStore } from '@ngrx/store';
+
+import { provideEffects } from '@ngrx/effects';
+import { EntidadesModule } from './modules/entidades/entidades.module';
+
+import { EntidadesEffects } from './store/entidades/entidades.effects';
+import { entidadesReducer } from './store/entidades/entidades.reducer';
+
 registerLocaleData(ptBr);
 
 const scrollConfig: InMemoryScrollingOptions = {
@@ -40,6 +47,14 @@ export const appConfig: ApplicationConfig = {
 				separator: '-'
 			})
 		]),
-		provideStore({})
+		provideStore({
+			entidades: entidadesReducer // Configuração do reducer para gerenciar o estado "entidadesPagination"
+		}),
+		provideEffects([
+			EntidadesEffects // Configuração dos efeitos relacionados à paginação das entidades
+		]),
+		importProvidersFrom([
+			EntidadesModule // Importa o módulo local que contém configurações específicas do recurso "Entidades"
+		])
 	]
 };
