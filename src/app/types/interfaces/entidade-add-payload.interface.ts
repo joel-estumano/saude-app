@@ -1,4 +1,4 @@
-export interface EntidadeAddPayload {
+export interface IEntidadeAddPayload {
 	ativa: boolean;
 	cnpj: string;
 	data_inauguracao: string;

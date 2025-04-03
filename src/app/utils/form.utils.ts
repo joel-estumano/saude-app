@@ -227,7 +227,7 @@ export class FormUtils {
 						case 'noSelection':
 							return 'não foi selecionado';
 						case 'arrayMinLength':
-							return 'precisa selecionar items';
+							return 'precisa selecionar itens';
 						default:
 							return 'é inválido';
 					}

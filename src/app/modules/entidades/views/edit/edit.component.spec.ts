@@ -4,6 +4,7 @@ import { EntidadesService } from '../../services/entidades.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EntidadesModule } from '../../entidades.module';
+import { Store } from '@ngrx/store';
 
 describe('EditComponent', () => {
 	let component: EditComponent;
@@ -12,7 +13,7 @@ describe('EditComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [EntidadesModule],
-			providers: [EntidadesService, provideHttpClient(), provideHttpClientTesting()]
+			providers: [EntidadesService, provideHttpClient(), provideHttpClientTesting(), { provide: Store, useValue: {} }]
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(EditComponent);

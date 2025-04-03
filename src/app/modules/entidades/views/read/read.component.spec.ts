@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EntidadesService } from '../../services/entidades.service';
 import { EntidadesModule } from '../../entidades.module';
+import { Store } from '@ngrx/store';
 
 describe('ReadComponent', () => {
 	let component: ReadComponent;
@@ -12,7 +13,7 @@ describe('ReadComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [EntidadesModule],
-			providers: [EntidadesService, provideHttpClient(), provideHttpClientTesting()]
+			providers: [EntidadesService, provideHttpClient(), provideHttpClientTesting(), { provide: Store, useValue: {} }]
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(ReadComponent);

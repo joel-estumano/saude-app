@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IAlert } from '@interfaces';
-import { BehaviorSubject, delay, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -33,17 +33,15 @@ export class AlertService {
 	 * @param timedelay - Tempo (em milissegundos) antes de o alerta ser automaticamente removido. O padrão é 3000 ms.
 	 * @returns Observable que emite após o tempo de atraso e antes de o alerta ser removido.
 	 */
-	add(type: IAlert['type'], message: string, timedelay = 3000): Observable<void> {
+	send(type: IAlert['type'], message: string, timedelay = 3000): void {
 		const alert: IAlert = { message, type };
-		this.alerts.push(alert);
-		this.alertsSubject.next(this.alerts);
+		this.alerts.push(alert); // Adiciona o alerta à lista
+		this.alertsSubject.next(this.alerts); // Notifica os componentes sobre a alteração
 
-		return of(undefined).pipe(
-			delay(timedelay),
-			tap(() => {
-				this.remove(this.alerts.indexOf(alert));
-			})
-		);
+		// Usa setTimeout para remover o alerta após o tempo especificado
+		setTimeout(() => {
+			this.remove(this.alerts.indexOf(alert));
+		}, timedelay);
 	}
 
 	/**

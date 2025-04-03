@@ -24,7 +24,9 @@
 						></app-selector>
 					</div>
 					<div>
-						<label for="especialidades">Especialidades</label>
+						<label for="especialidades" class="flex items-center gap-1"
+							><span>Especialidades</span> <span class="text-xs italic text-foreground">(min. 5 itens)</span></label
+						>
 						<app-multi-selector
 							formControlName="especialidades"
 							[items]="data.especialidades"
