@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ProgressBarService } from './progress-bar.service';
 
 describe('ProgressBarService', () => {

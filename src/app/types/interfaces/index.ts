@@ -3,7 +3,7 @@ export * from './entidade-add-payload.interface';
 export * from './entidades-pagination-data.interface';
 export * from './entidades-pagination-data-store.interface';
 export * from './entidades-pagination-filters.interface';
-
+export * from './entidade-valid-error-response.interface';
 export * from './regional-data.interface';
 export * from './especialidade-data.interface';
 export * from './alert.interface';

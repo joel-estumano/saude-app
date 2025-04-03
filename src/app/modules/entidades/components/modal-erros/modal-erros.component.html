@@ -1,0 +1,12 @@
+<div class="flex flex-col items-center gap-8">
+	<p class="f6 !text-destructive">Ops! :(</p>
+	<p>{{ status() }}</p>
+	<ul class="w-full space-y-1 text-sm text-center">
+		@for (erro of this.erros(); track $index) {
+			<li class="px-1 text">{{ erro }}</li>
+		}
+	</ul>
+	<div class="inline-flex justify-center gap-5">
+		<button type="button" class="default" title="Fechar" (click)="close()" [disabled]="false">Ok</button>
+	</div>
+</div>

@@ -1,11 +1,13 @@
-import { AlertService } from 'src/app/services/alert/alert.service';
+import { AlertService } from 'src/app/shared/alert/services/alert.service';
 import { catchError, forkJoin, map, Observable, of, startWith, Subject, switchMap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, computed, effect, input, OnInit, output, signal } from '@angular/core';
-import { IEntidadeAddPayload, IEntidadeData, IEntidadesPaginationDataStore, IEspecialidadeData, IRegionalData } from '@interfaces';
+import { EntidadeValidErrorResponse, IEntidadeAddPayload, IEntidadeData, IEntidadesPaginationDataStore, IEspecialidadeData, IRegionalData } from '@interfaces';
 import { EntidadesService } from '../../services/entidades.service';
 import { EspecialidadesService } from 'src/app/modules/especialidades/services/especialidades.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormUtils } from 'src/app/utils';
+import { ModalService } from 'src/app/shared/modal/services/modal.service';
+import { ModalErrosComponent } from '../modal-erros/modal-erros.component';
 import { RegionaisService } from 'src/app/modules/regionais/services/regionais.service';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -54,6 +56,7 @@ export class EntidadeFormComponent implements OnInit {
 		private especialidadesService: EspecialidadesService,
 		private entidadesService: EntidadesService,
 		private alertService: AlertService,
+		private modalService: ModalService,
 		private store: Store<{ entidades: IEntidadesPaginationDataStore }>
 	) {
 		this.form = this.fb.group({
@@ -138,11 +141,11 @@ export class EntidadeFormComponent implements OnInit {
 							this.alertService.send('success', 'Operação realizada com sucesso!');
 							this.router.navigate(['visualizar', result.uuid]);
 						},
-						error: () => {
-							this.alertService.send('error', 'Falha ao editar entidade!');
+						error: (error: EntidadeValidErrorResponse) => {
 							this.form.enable();
 							this.isLoading.set(false);
 							this.isFormSubmited.set(false);
+							this.handleError(error);
 						},
 						complete: () => {
 							this.form.enable();
@@ -157,11 +160,11 @@ export class EntidadeFormComponent implements OnInit {
 						this.alertService.send('success', 'Operação realizada com sucesso!');
 						this.router.navigate(['visualizar', result.uuid]);
 					},
-					error: () => {
-						this.alertService.send('error', 'Falha ao salvar entidade!');
+					error: (error: EntidadeValidErrorResponse) => {
 						this.form.enable();
 						this.isLoading.set(false);
 						this.isFormSubmited.set(false);
+						this.handleError(error);
 					},
 					complete: () => {
 						this.form.enable();
@@ -201,5 +204,17 @@ export class EntidadeFormComponent implements OnInit {
 		erros.forEach((element) => {
 			this.alertService.send('error', `${element.field} ${element.errors.join(', ')}.`);
 		});
+	}
+
+	private handleError(erro: EntidadeValidErrorResponse) {
+		this.modalService.open(ModalErrosComponent);
+
+		const instance = this.modalService.getInstance<ModalErrosComponent>();
+		if (instance) {
+			instance.setErrors(erro);
+			instance.close = () => {
+				this.modalService.close();
+			};
+		}
 	}
 }

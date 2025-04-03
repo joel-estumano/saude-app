@@ -5,15 +5,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './views/login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { IconComponent } from '../../shared/icon/icon.component';
+import { ProgressBarModule } from '../../shared/progress-bar/progress-bar.module';
 
 const routes: Routes = [
-	{ path: 'login', component: LoginComponent, title: 'Login' },
+	{ path: '', component: LoginComponent, title: '' },
 	{ path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
 
 @NgModule({
 	declarations: [LoginComponent],
-	imports: [CommonModule, RouterModule.forChild(routes), ContainerBaseComponent, FormsModule, ReactiveFormsModule, NgClass],
+	imports: [CommonModule, RouterModule.forChild(routes), ContainerBaseComponent, FormsModule, ReactiveFormsModule, NgClass, IconComponent, ProgressBarModule],
 	providers: [AuthService]
 })
 export class AuthModule {}

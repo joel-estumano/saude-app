@@ -9,10 +9,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { ListComponent } from './views/list/list.component';
 import { ModalConfirmRemoveComponent } from './components/modal-confirm-remove/modal-confirm-remove.component';
+import { ModalErrosComponent } from './components/modal-erros/modal-erros.component';
 import { ModalReadEspecialidadesComponent } from './components/modal-read-especialidades/modal-read-especialidades.component';
 import { MultiSelectorComponent } from 'src/app/shared/multi-selector/multi-selector.component';
 import { NgModule } from '@angular/core';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { OrderIconPipe } from './pipes/order-icon/order-icon.pipe';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { ReadComponent } from './views/read/read.component';
 import { RegionaisModule } from '../regionais/regionais.module';
@@ -38,8 +40,10 @@ const routes: Routes = [
 		EntidadeFormComponent,
 		TextActionSubmitPipe,
 		TextEspecialidadesPipe,
+		OrderIconPipe,
 		ModalConfirmRemoveComponent,
-		ModalReadEspecialidadesComponent
+		ModalReadEspecialidadesComponent,
+		ModalErrosComponent
 	],
 	imports: [
 		CommonModule,

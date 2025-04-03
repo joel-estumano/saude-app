@@ -1,13 +1,10 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, signal, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { ModalService } from '../services/modal.service';
 import { Subscription } from 'rxjs';
-import { ModalService } from 'src/app/services/modal/modal.service';
-import { IconComponent } from '../icon/icon.component';
-import { NgClass } from '@angular/common';
 
 @Component({
 	selector: 'app-modal',
-	standalone: true,
-	imports: [IconComponent, NgClass],
+
 	templateUrl: './modal.component.html',
 	styleUrl: './modal.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush

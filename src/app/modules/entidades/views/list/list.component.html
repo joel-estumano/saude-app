@@ -7,7 +7,26 @@
 		<!-- campo de busca -->
 		<div>
 			<label for="search">Pesquisar</label>
-			<input type="search" name="search" [formControl]="searchField" placeholder="Pesquisar por: Nome, Razão Social, CNPJ ou Região" />
+			<div class="relative block">
+				<input
+					type="search"
+					#inputSearch
+					name="search"
+					class="pr-3"
+					[formControl]="searchField"
+					placeholder="Pesquisar por: Nome, Razão Social, CNPJ ou Região"
+				/>
+				<button
+					type="button"
+					title="Limpar"
+					class="absolute inset-y-0 cursor-pointer right-3 disabled:cursor-default"
+					[disabled]="inputSearch.disabled"
+					(click)="cleansearch()"
+					[ngClass]="{ hidden: !this.searchField.value }"
+				>
+					<app-icon icon="heroXMark" />
+				</button>
+			</div>
 		</div>
 
 		@if (entidadesPagination$ | async; as entidades) {
@@ -21,16 +40,50 @@
 						<h2 class="f4">Ops! :(</h2>
 					</div>
 				} @else {
-					<div class="block w-full">
+					<div class="block w-full fade-in">
 						@if (entidades.data.data.length) {
 							<!-- cabeçalho da listagem -->
 							<div
-								class="hidden border border-accent bg-accent text-background sm:grid gap-4 px-4 py-2 sm:grid-cols-[2fr_1fr_2fr_1fr_1fr_auto] text-sm font-semibold"
+								class="hidden border border-accent bg-accent text-background sm:grid gap-4 px-4 py-2 sm:grid-cols-[2fr_1fr_2fr_1fr_1fr_1fr_auto] text-sm font-semibold"
 							>
-								<div class="">Nome Fantasia</div>
-								<div class="">Região</div>
+								<div class="flex items-center gap-1">
+									<span>Nome Fantasia</span>
+									<button
+										type="button"
+										title="Ordenar"
+										class="text-lg"
+										[disabled]="entidades.isLoading"
+										(click)="manageOrderState('nomeFantasia')"
+									>
+										<app-icon [icon]="orderNomeFantasia().on | orderIcon: orderNomeFantasia().order"></app-icon>
+									</button>
+								</div>
+								<div class="flex items-center gap-1">
+									<span>Regional</span>
+									<button
+										type="button"
+										title="Ordenar"
+										class="text-lg"
+										[disabled]="entidades.isLoading"
+										(click)="manageOrderState('regional')"
+									>
+										<app-icon [icon]="orderRegional().on | orderIcon: orderRegional().order"></app-icon>
+									</button>
+								</div>
 								<div class="">Especialidades</div>
 								<div class="text-center">Ativa</div>
+								<div class="flex items-center gap-1">
+									<span>Registro</span>
+									<button
+										type="button"
+										title="Ordenar"
+										class="text-lg"
+										[disabled]="entidades.isLoading"
+										(click)="manageOrderState('created_at')"
+									>
+										<app-icon [icon]="orderCreatedAt().on | orderIcon: orderCreatedAt().order"></app-icon>
+									</button>
+								</div>
 								<div class="text-center">Ações</div>
 								<div class=""></div>
 							</div>
@@ -39,7 +92,7 @@
 								@for (entidade of entidades.data.data; track entidade.uuid; let idx = $index, o = $odd) {
 									<li
 										role="row"
-										class="grid items-start grid-cols-1 gap-4 px-4 py-2 max-sm:first:border-t border-b sm:items-center sm:grid-cols-[2fr_1fr_2fr_1fr_1fr_auto] text-sm"
+										class="grid items-start grid-cols-1 gap-4 px-4 py-2 max-sm:first:border-t border-b sm:items-center sm:grid-cols-[2fr_1fr_2fr_1fr_1fr_1fr_auto] text-sm"
 										[ngClass]="{ 'bg-muted': o }"
 									>
 										<div role="cell">
@@ -64,6 +117,11 @@
 												[icon]="entidade.ativa ? 'heroCheck' : 'heroMinus'"
 												[ngClass]="entidade.ativa ? 'text-success' : 'text-destructive'"
 											/>
+										</div>
+
+										<div role="cell">
+											<span class="block font-semibold sm:hidden">Registro:</span>
+											<span class="line-clamp-1"> {{ entidade.created_at | date: "dd/MM/yyyy HH:mm" }} </span>
 										</div>
 
 										<div role="cell" class="flex items-center justify-start gap-3 sm:justify-center">

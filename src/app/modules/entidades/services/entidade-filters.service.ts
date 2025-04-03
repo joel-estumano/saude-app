@@ -6,13 +6,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 	providedIn: 'platform'
 })
 export class EntidadeFiltersService {
-	private subject!: BehaviorSubject<IEntidadesPaginationFilters>;
+	private subject: BehaviorSubject<IEntidadesPaginationFilters>;
 
 	constructor() {
-		this.subject = new BehaviorSubject({
+		this.subject = new BehaviorSubject<IEntidadesPaginationFilters>({
 			page: 1,
 			per_page: 4,
-			text: ''
+			text: '',
+			sort_field: 'created_at',
+			sort_order: 'asc'
 		});
 	}
 
@@ -31,7 +33,19 @@ export class EntidadeFiltersService {
 	filterByPage(page: number): void {
 		this.subject.next({
 			...this.subject.value,
-			page: page
+			page
 		});
+	}
+
+	filterBySort(field: string, order: 'asc' | 'desc'): void {
+		this.subject.next({
+			...this.subject.value,
+			sort_field: field,
+			sort_order: order
+		});
+	}
+
+	getValues(): IEntidadesPaginationFilters {
+		return this.subject.value;
 	}
 }

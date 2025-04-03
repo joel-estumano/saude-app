@@ -1,3 +1,4 @@
+<app-progress-bar class="fixed top-0 w-full" />
 <app-container-base>
 	<div class="flex flex-col gap-16">
 		<h2 class="f2">Login</h2>
@@ -12,18 +13,35 @@
 							formControlName="email"
 							placeholder="janedoe@mail.com"
 							[ngClass]="formUtils.invalidClass(formUtils.getControl(loginForm, 'email'), this.isFormSubmited())"
+							autocomplete="off"
 						/>
 					</div>
 				</div>
 				<div class="grid grid-cols-1">
 					<div>
 						<label for="password">Senha</label>
-						<input
-							type="password"
-							formControlName="password"
-							placeholder="******"
-							[ngClass]="formUtils.invalidClass(formUtils.getControl(loginForm, 'password'), this.isFormSubmited())"
-						/>
+						<div class="relative block">
+							<input
+								[type]="this.showPassword() ? 'text' : 'password'"
+								formControlName="password"
+								placeholder="******"
+								[ngClass]="formUtils.invalidClass(formUtils.getControl(loginForm, 'password'), this.isFormSubmited())"
+								class="pr-3"
+								autocomplete="off"
+							/>
+							<button
+								type="button"
+								class="absolute inset-y-0 cursor-pointer right-3"
+								[disabled]="this.isLoading()"
+								(mousedown)="togglePasswordVisibility(true)"
+								(mouseup)="togglePasswordVisibility(false)"
+								(mouseleave)="togglePasswordVisibility(false)"
+								(touchstart)="togglePasswordVisibility(true)"
+								(touchend)="togglePasswordVisibility(false)"
+							>
+								<app-icon [icon]="this.showPassword() ? 'heroEye' : 'heroEyeSlash'" />
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

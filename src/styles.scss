@@ -30,115 +30,220 @@
 	--font-poppins: "Poppins";
 }
 
+/*
+===============================
+Estilos Base
+===============================
+Estilos aplicados globalmente a todos os elementos da página.
+Eles garantem que bordas e fontes usem padrões consistentes.
+*/
 @layer base {
 	* {
+		/* Aplica borda padrão e define a fonte global como Montserrat */
 		@apply border-border font-montserrat;
 	}
 }
 
+/*
+===============================
+Animação de Fade-in
+===============================
+Define uma animação suave de opacidade para elementos que devem aparecer gradualmente.
+*/
 .fade-in {
-	animation: fadein ease-in-out 0.5s;
+	/* Ativa a animação de fade-in com uma curva de aceleração suave */
+	animation: fadein ease-in-out 0.3s;
 }
 
 @keyframes fadein {
+	/* Define o estado inicial da opacidade como 0 (invisível) */
 	from {
 		opacity: 0;
 	}
 
+	/* Define o estado final da opacidade como 1 (visível) */
 	to {
 		opacity: 1;
 	}
 }
 
+/*
+===============================
+Fontes por Tamanho
+===============================
+Classes para definir tamanhos, pesos e espaçamentos de fontes.
+São usadas para criar uma hierarquia tipográfica consistente.
+*/
 .f1,
 .f2,
 .f3,
 .f4,
 .f5,
 .f6 {
+	/* Configuração padrão para espaçamento, fonte e cor do texto */
 	@apply tracking-wide font-poppins text-accent;
 }
 
+/* Títulos extra grandes */
 .f1 {
 	@apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold;
 }
 
+/* Títulos grandes */
 .f2 {
 	@apply text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold;
 }
 
+/* Subtítulos grandes */
 .f3 {
 	@apply text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-normal;
 }
 
+/* Subtítulos médios */
 .f4 {
 	@apply text-xl md:text-2xl lg:text-3xl xl:text-4xl font-normal;
 }
 
+/* Textos menores */
 .f5 {
 	@apply text-lg md:text-xl lg:text-2xl xl:text-3xl font-normal;
 }
 
+/* Textos pequenos */
 .f6 {
 	@apply text-base md:text-lg lg:text-xl xl:text-2xl font-normal;
 }
 
+/*
+===============================
+Estilização da Primeira Letra
+===============================
+Adiciona uma transformação estilística à primeira letra do texto.
+*/
 .first-uppercase::first-letter {
-	@apply uppercase;
+	@apply uppercase; /* Define a primeira letra como maiúscula */
 }
 
+/*
+===============================
+Estilização de Labels
+===============================
+Aplica layout e estilos de fonte para labels de formulários,
+exceto aqueles com classes específicas.
+*/
 label:not(.selector-item, .multi-selector-item) {
 	@apply flex justify-start text-sm mb-1 ms-1 text-accent font-semibold;
 }
 
-/* Classe padrão input e textarea */
+/*
+===============================
+Inputs e Textareas
+===============================
+Define estilos consistentes para campos de formulário.
+Inclui comportamentos para estados normais e inválidos.
+*/
 input,
 textarea {
-	@apply w-full rounded-none outline-none bg-background px-3 py-2 border focus:outline-none focus:ring-1 focus:ring-accent text-sm  transition-all ease-in-out duration-300 max-sm:duration-0;
+	/* Estilos gerais para campos de entrada */
+	@apply w-full rounded-none outline-none bg-background px-3 py-2 border;
+	@apply focus:outline-none focus:ring-1 focus:ring-accent; /* Foco com anel de destaque */
+	@apply text-sm transition-all ease-in-out duration-300 max-sm:duration-0; /* Transições suaves */
+	@apply disabled:opacity-70 disabled:cursor-not-allowed; /* Aparência para estados desativados */
 }
 
-/* Classe para estados inválidos em input e textarea */
+/* Estilos para campos inválidos */
 input.is-invalid,
 textarea.is-invalid {
-	@apply border border-destructive focus:outline-none focus:ring-1 focus:ring-destructive focus:border-destructive;
+	@apply border border-destructive; /* Bordas vermelhas para erros */
+	@apply focus:outline-none focus:ring-1 focus:ring-destructive focus:border-destructive;
 }
 
-/* Classe padrão para o select */
+/*
+===============================
+Estilização para Input de Busca
+===============================
+Remove o botão 'x' padrão exibido em navegadores como Chrome e Safari.
+*/
+input[type="search"]::-webkit-search-cancel-button {
+	display: none; /* Remove o botão de limpar do campo de busca */
+}
+
+/*
+===============================
+Dropdowns (Select)
+===============================
+Define estilos padrão e inválidos para campos do tipo select.
+*/
 select {
-	@apply w-full rounded-none outline-none bg-background px-3 py-2 border focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
+	@apply w-full rounded-none outline-none bg-background px-3 py-2 border;
+	@apply focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
 }
 
-/* Classe para estados inválidos do select */
+/* Estilos para dropdowns inválidos */
 select.is-invalid {
-	@apply border border-destructive focus:outline-none focus:ring-1 focus:ring-destructive focus:border-destructive;
+	@apply border border-destructive; /* Bordas vermelhas para estados de erro */
+	@apply focus:outline-none focus:ring-1 focus:ring-destructive focus:border-destructive;
 }
 
-/* Tailwind CSS para o tema personalizado */
+/*
+===============================
+Checkboxes
+===============================
+Define estilos para caixas de seleção e seus rótulos.
+*/
 .checkbox {
-	@apply w-5 h-5 accent-accent rounded-none outline-none bg-background border px-3 py-2 focus:ring-1 focus:ring-accent text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
+	/* Estilo base para checkboxes */
+	@apply w-5 h-5 accent-accent rounded-none outline-none bg-background border;
+	@apply px-3 py-2 focus:ring-1 focus:ring-accent;
+	@apply text-sm transition-all ease-in-out duration-300 max-sm:duration-0;
 }
 
 .checkbox-label {
+	/* Alinha o rótulo com a checkbox e adiciona espaçamento */
 	@apply flex items-center gap-2 text-sm cursor-pointer w-fit;
 }
 
+/*
+===============================
+Botões
+===============================
+Define estilos globais e específicos para botões,
+incluindo estados padrão, primário e de remoção.
+*/
+button {
+	@apply disabled:opacity-70 disabled:cursor-not-allowed; /* Botões desativados possuem opacidade reduzida */
+}
+
+/* Botão padrão */
 button.default {
-	@apply min-w-24 rounded-none bg-white px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-white transition-all ease-in-out duration-300 max-sm:duration-0 text-accent font-semibold;
+	@apply min-w-24 rounded-none bg-white px-3 py-2 border; /* Layout básico */
+	@apply text-sm focus:outline-none focus:ring-1 focus:ring-white; /* Foco em branco */
+	@apply transition-all ease-in-out duration-300 max-sm:duration-0;
+	@apply text-accent font-semibold; /* Texto em cor acentuada */
 }
 
+/* Botão primário */
 button.primary {
-	@apply min-w-24 rounded-none bg-primary px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all ease-in-out duration-300 max-sm:duration-0 text-white font-semibold;
+	@apply min-w-24 rounded-none bg-primary px-3 py-2 border; /* Cor de destaque primário */
+	@apply text-sm focus:outline-none focus:ring-1 focus:ring-primary; /* Foco com cor primária */
+	@apply transition-all ease-in-out duration-300 max-sm:duration-0;
+	@apply text-white font-semibold; /* Texto em branco */
 }
 
+/* Botão de remoção */
 button.remove {
-	@apply min-w-24 rounded-none bg-destructive px-3 py-2 border text-sm focus:outline-none focus:ring-1 focus:ring-destructive transition-all ease-in-out duration-300 max-sm:duration-0 text-white font-semibold;
+	@apply min-w-24 rounded-none bg-destructive px-3 py-2 border; /* Cor destrutiva (vermelho) */
+	@apply text-sm focus:outline-none focus:ring-1 focus:ring-destructive; /* Foco com cor destrutiva */
+	@apply transition-all ease-in-out duration-300 max-sm:duration-0;
+	@apply text-white font-semibold; /* Texto em branco */
 }
 
-// .no-scrollbar {
-// 	scrollbar-width: none; /* Para navegadores que suportam */
-// 	-ms-overflow-style: none; /* Para navegadores da Microsoft */
-// }
-
-// .no-scrollbar::-webkit-scrollbar {
-// 	display: none; /* Para navegadores baseados no WebKit */
-// }
+/*
+===============================
+Compatibilidade com Navegadores
+===============================
+Define regras específicas para navegadores como Edge e Chrome.
+*/
+::-ms-reveal {
+	display: none; /* Remove o 'olho' dos campos de senha no Edge */
+}
