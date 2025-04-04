@@ -1,10 +1,11 @@
 import { catchError, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpService } from 'src/app/services/http/http.service';
-import { ICredentials, ILoginPayload, IRefreshTokenPayload } from '@interfaces';
+import { ILoginResponse, ILoginPayload, IRefreshTokenPayload, IUser } from '@interfaces';
 import { Injectable } from '@angular/core';
-// import { jwtDecode } from 'jwt-decode';
 import { LocalStorageService } from 'ngx-webstorage';
+import { logoutUser, setUser } from 'src/app/store/user/user.actions';
+import { Store } from '@ngrx/store';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,18 +13,20 @@ import { LocalStorageService } from 'ngx-webstorage';
 export class AuthService {
 	constructor(
 		private httpService: HttpService,
-		private localSt: LocalStorageService
+		private localSt: LocalStorageService,
+		private store: Store<{ user: IUser }>
 	) {}
 
-	login(login: ILoginPayload): Observable<ICredentials> {
-		return this.httpService.post<ILoginPayload, ICredentials>('login', login).pipe(tap((credentials) => this.storeCredentials(credentials)));
+	login(login: ILoginPayload): Observable<ILoginResponse> {
+		return this.httpService.post<ILoginPayload, ILoginResponse>('login', login).pipe(tap((credentials) => this.storeCredentials(credentials)));
 	}
 
 	logout(): Observable<void> {
+		this.store.dispatch(logoutUser());
 		return this.httpService.get<void>('logout').pipe(tap(() => this.clearCredentials()));
 	}
 
-	refreshToken(): Observable<ICredentials | null> {
+	refreshToken(): Observable<ILoginResponse | null> {
 		const refreshToken = this.getCredentialValue('refresh_token');
 		if (!refreshToken) {
 			this.clearCredentials();
@@ -38,7 +41,7 @@ export class AuthService {
 			scope: ''
 		};
 
-		return this.httpService.post<IRefreshTokenPayload, ICredentials>('refresh', payload).pipe(
+		return this.httpService.post<IRefreshTokenPayload, ILoginResponse>('refresh', payload).pipe(
 			tap((credentials) => {
 				this.storeCredentials(credentials); // Salva novas credenciais
 			}),
@@ -49,12 +52,15 @@ export class AuthService {
 		);
 	}
 
-	private storeCredentials(credentials: ICredentials): void {
-		const expirationTime = Date.now() + credentials.expires_in * 1000;
-		this.localSt.store('access_token', credentials.access_token);
-		this.localSt.store('refresh_token', credentials.refresh_token);
-		this.localSt.store('expires_in', credentials.expires_in);
+	private storeCredentials(loginResponse: ILoginResponse): void {
+		const expirationTime = Date.now() + loginResponse.expires_in * 1000;
+		this.localSt.store('access_token', loginResponse.access_token);
+		this.localSt.store('refresh_token', loginResponse.refresh_token);
+		this.localSt.store('expires_in', loginResponse.expires_in);
 		this.localSt.store('expiration_time', expirationTime);
+		this.localSt.store('user', loginResponse.user);
+		//
+		this.store.dispatch(setUser({ user: loginResponse.user }));
 	}
 
 	private clearCredentials(): void {
@@ -73,16 +79,7 @@ export class AuthService {
 		return currentTime < expirationTime; // Retorna true se o token ainda estiver válido
 	}
 
-	getCredentialValue(credential: keyof ICredentials): string {
+	getCredentialValue(credential: keyof ILoginResponse): string {
 		return this.localSt.retrieve(credential);
 	}
-
-	/* private decodeToken(token: string): any {
-		try {
-			return jwtDecode(token); // Decodifica o token usando a biblioteca
-		} catch (error) {
-			console.error('Erro ao decodificar o token:', error);
-			return null; // Retorna null em caso de erro
-		}
-	} */
 }

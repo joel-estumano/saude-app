@@ -2,7 +2,7 @@ import { AlertService } from 'src/app/shared/alert/services/alert.service';
 import { catchError, EMPTY, Observable, Subject, switchMap, takeUntil, of, startWith } from 'rxjs';
 import { Component, Input, signal, OnDestroy } from '@angular/core';
 import { EntidadesService } from '../../services/entidades.service';
-import { getEntidadeByUuidSelector } from 'src/app/store/entidades/entidades.selectors';
+import { selectEntidadeByUuid } from 'src/app/store/entidades/entidades.selectors';
 import { IEntidadeData } from '@interfaces';
 import { ModalReadEspecialidadesComponent } from '../../components/modal-read-especialidades/modal-read-especialidades.component';
 import { ModalService } from 'src/app/shared/modal/services/modal.service';
@@ -46,7 +46,7 @@ export class ReadComponent implements OnDestroy {
 					this.router.navigate(['list']);
 					return EMPTY;
 				}
-				return this.store.select(getEntidadeByUuidSelector(currentUuid)).pipe(
+				return this.store.select(selectEntidadeByUuid(currentUuid)).pipe(
 					switchMap((entidade) => (entidade ? of(entidade) : this.entidadesService.read(currentUuid))),
 					catchError((error) => {
 						this.alertService.send('error', 'Ocorreu um erro inesperado!');

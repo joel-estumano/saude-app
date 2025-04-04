@@ -9,4 +9,5 @@ export * from './especialidade-data.interface';
 export * from './alert.interface';
 export * from './login-payload.interface';
 export * from './refresh-token-payload.interface';
-export * from './credentials.interface';
+export * from './login-response.interface';
+export * from './user.interface';

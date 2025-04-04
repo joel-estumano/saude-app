@@ -1,35 +1,24 @@
-import { AlertService } from '../shared/alert/services/alert.service';
-import { AuthService } from '../modules/auth/services/auth.service';
-import { Component, signal } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { ProgressBarModule } from '../shared/progress-bar/progress-bar.module';
+import { UserProfileComponent } from '../shared/user-profile/user-profile.component';
+import { LocalStorageService } from 'ngx-webstorage';
+import { Store } from '@ngrx/store';
+import { IUser } from '@interfaces';
+import { setUser } from '../store/user/user.actions';
 
 @Component({
 	selector: 'app-layout',
 	standalone: true,
-	imports: [RouterOutlet, ProgressBarModule],
+	imports: [RouterOutlet, ProgressBarModule, UserProfileComponent],
 	templateUrl: './layout.component.html'
 })
 export class LayoutComponent {
-	isLoading = signal<boolean>(false);
 	constructor(
-		private authService: AuthService,
-		private alertService: AlertService,
-		private router: Router
-	) {}
-
-	logout(): void {
-		this.authService.logout().subscribe({
-			next: () => {
-				this.router.navigate(['/login']);
-			},
-			error: () => {
-				this.alertService.send('error', 'Erro ao sair'); // Adiciona mensagem de erro ao serviço de alertas
-				this.isLoading.set(false);
-			},
-			complete: () => {
-				this.isLoading.set(false);
-			}
-		});
+		private localSt: LocalStorageService,
+		private store: Store<{ user: IUser }>
+	) {
+		const user = this.localSt.retrieve('user');
+		this.store.dispatch(setUser({ user: user ? user : null }));
 	}
 }
