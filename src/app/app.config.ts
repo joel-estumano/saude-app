@@ -22,6 +22,7 @@ import { entidadesReducer } from './store/entidades/entidades.reducer';
 import { AlertModule } from './shared/alert/alert.module';
 import { ProgressBarModule } from './shared/progress-bar/progress-bar.module';
 import { ModalModule } from './shared/modal/modal.module';
+import { userReducer } from './store/user/user.reducer';
 
 // Registra os dados de localização para 'pt-BR'
 registerLocaleData(ptBr);
@@ -61,7 +62,8 @@ export const appConfig: ApplicationConfig = {
 		]),
 		// Configuração do estado global com reducer do NgRx
 		provideStore({
-			entidades: entidadesReducer // Reducer responsável pelo gerenciamento de entidades
+			entidades: entidadesReducer, // Reducer responsável pelo gerenciamento de entidades
+			user: userReducer // Reducer responsável pelo gerenciamento de usuários
 		}),
 		// Configuração de efeitos NgRx para ações assíncronas
 		provideEffects([

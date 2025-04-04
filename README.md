@@ -50,6 +50,10 @@ npm i
 
 #### É necessário que já possua o sistema api disponível no seu local de desenvolvimento.
 
+Seu usuário padrão é: \
+email: admin@mail.com \
+password: admin123
+
 Dentro do diretório do projeto, navegue até src/environments/
 Edite o arquivo environment.development.ts preenchendo com as informações geradas pelo sistema api.
 
@@ -58,7 +62,7 @@ Estará disponívem para (Password grant client)
 clientId: ? \
 clientSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-Mais detalhes confira aqui https://github.com/joel-estumano/saude-api na secção 'Configure os segredos de autenticação via OAuth:'
+Mais detalhes confira aqui https://github.com/joel-estumano/saude-api
 
 ### Execução do Projeto
 

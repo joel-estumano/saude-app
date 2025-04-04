@@ -3,7 +3,7 @@ import { Component, effect, OnDestroy, signal } from '@angular/core';
 import { debounceTime, distinctUntilChanged, map, skip, takeUntil } from 'rxjs/operators';
 import { EntidadeFiltersService } from '../../services/entidade-filters.service';
 import { FormControl } from '@angular/forms';
-import { getEntidadesErrorSelector, getEntidadesPaginationSelector } from 'src/app/store/entidades/entidades.selectors';
+import { selectEntidadesPaginationError, selectEntidadesPagination } from 'src/app/store/entidades/entidades.selectors';
 import { IEntidadesPaginationDataStore } from '@interfaces';
 import { loadEntidadesPagination } from 'src/app/store/entidades/entidades.actions';
 import { Observable, Subject } from 'rxjs';
@@ -43,9 +43,9 @@ export class ListComponent implements OnDestroy {
 		private store: Store<{ entidades: IEntidadesPaginationDataStore }>,
 		private entidadeFiltersService: EntidadeFiltersService
 	) {
-		this.entidadesPagination$ = this.store.select(getEntidadesPaginationSelector);
+		this.entidadesPagination$ = this.store.select(selectEntidadesPagination);
 
-		this.store.select(getEntidadesErrorSelector).subscribe((error) => {
+		this.store.select(selectEntidadesPaginationError).subscribe((error) => {
 			if (error) {
 				alertService.send('error', 'Ocorreu um erro inesperado!');
 			}
@@ -76,7 +76,7 @@ export class ListComponent implements OnDestroy {
 			});
 
 		this.store
-			.select(getEntidadesPaginationSelector)
+			.select(selectEntidadesPagination)
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((paginationState) => {
 				if (paginationState.isLoading) {
