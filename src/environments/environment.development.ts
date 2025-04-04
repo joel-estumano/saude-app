@@ -8,6 +8,6 @@
  */
 export const environment = {
 	clientId: 0, // O ID do cliente gerado pela API e utilizado para autenticação via OAuth
-	clientSecret: '', // O segredo gerado pela API e utilizado para autenticação via OAuth
+	clientSecret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // O segredo gerado pela API e utilizado para autenticação via OAuth
 	apiURL: 'api' // Não precisa substituir
 };
