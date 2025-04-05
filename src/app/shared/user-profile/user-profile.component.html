@@ -1,8 +1,8 @@
-@if (user$ | async; as user) {
+@if (authData$ | async; as authData) {
 	<div class="inline-flex items-center h-full gap-2">
 		<div>
-			<p class="text-sm leading-none">{{ user.name }}</p>
-			<p class="text-xs font-semibold">{{ user.email }}</p>
+			<p class="text-sm leading-none">{{ authData.loginResponse.user.name }}</p>
+			<p class="text-xs font-semibold">{{ authData.loginResponse.user.email }}</p>
 		</div>
 		<button class="px-2 py-1 text-xs w-fit h-fit bg-background" title="Logout" (click)="logout()" [disabled]="this.isLoading()">
 			{{ this.isLoading() ? "Saindo" : "Sair" }}

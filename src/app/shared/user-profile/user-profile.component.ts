@@ -2,10 +2,10 @@ import { AlertService } from '../alert/services/alert.service';
 import { AsyncPipe } from '@angular/common';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { Component, signal } from '@angular/core';
-import { IUser } from '@interfaces';
+import { IAuthDataStore } from '@interfaces';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { selectUser } from 'src/app/store/user/user.selectors';
+import { selectAuthData } from 'src/app/store/auth-data/auth-data.selectors';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -17,21 +17,21 @@ import { Store } from '@ngrx/store';
 })
 export class UserProfileComponent {
 	isLoading = signal<boolean>(false);
-	user$!: Observable<IUser | null>;
+	authData$!: Observable<IAuthDataStore>;
 
 	constructor(
 		private alertService: AlertService,
 		private authService: AuthService,
 		private router: Router,
-		private store: Store<{ user: IUser }>
+		private store: Store<{ authData: IAuthDataStore }>
 	) {
-		this.user$ = this.store.select(selectUser);
+		this.authData$ = this.store.select(selectAuthData);
 	}
 
 	logout(): void {
 		this.authService.logout().subscribe({
 			next: () => {
-				this.router.navigate(['/login']);
+				this.router.navigate(['login']);
 			},
 			error: () => {
 				this.alertService.send('error', 'Erro ao sair');

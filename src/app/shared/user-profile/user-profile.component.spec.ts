@@ -4,7 +4,6 @@ import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { Store } from '@ngrx/store';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { LocalStorageService } from 'ngx-webstorage';
 
 describe('UserProfileComponent', () => {
 	let component: UserProfileComponent;
@@ -13,7 +12,7 @@ describe('UserProfileComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [UserProfileComponent],
-			providers: [AuthService, provideHttpClient(), provideHttpClientTesting(), { provide: Store, useValue: {} }, LocalStorageService]
+			providers: [AuthService, provideHttpClient(), provideHttpClientTesting(), { provide: Store, useValue: {} }]
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(UserProfileComponent);
