@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
+import ptBr from '@angular/common/locales/pt';
 import {
 	InMemoryScrollingFeature,
 	InMemoryScrollingOptions,
@@ -7,22 +7,24 @@ import {
 	withComponentInputBinding,
 	withInMemoryScrolling
 } from '@angular/router';
-import { routes } from './app.routes';
-import { CustomTitleStrategy } from './strategies/title.strategy';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { registerLocaleData } from '@angular/common';
-import ptBr from '@angular/common/locales/pt';
-import { httpInterceptorProviders } from './modules/auth/interceptors';
-import { NgxWebstorageModule } from 'ngx-webstorage';
-import { provideStore } from '@ngrx/store';
-import { provideEffects } from '@ngrx/effects';
-import { EntidadesModule } from './modules/entidades/entidades.module';
-import { EntidadesEffects } from './store/entidades/entidades.effects';
-import { entidadesReducer } from './store/entidades/entidades.reducer';
 import { AlertModule } from './shared/alert/alert.module';
-import { ProgressBarModule } from './shared/progress-bar/progress-bar.module';
+import { ApplicationConfig, importProvidersFrom, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
+import { AuthDataEffects } from './store/auth-data/auth-data.effects';
+import { authDataReducer } from './store/auth-data/auth-data.reducer';
+import { AuthModule } from './modules/auth/auth.module';
+import { CustomTitleStrategy } from './strategies/title.strategy';
+import { EntidadesEffects } from './store/entidades/entidades.effects';
+import { EntidadesModule } from './modules/entidades/entidades.module';
+import { entidadesReducer } from './store/entidades/entidades.reducer';
+import { httpInterceptorProviders } from './modules/auth/interceptors';
 import { ModalModule } from './shared/modal/modal.module';
-import { userReducer } from './store/user/user.reducer';
+import { NgxWebstorageModule } from 'ngx-webstorage';
+import { ProgressBarModule } from './shared/progress-bar/progress-bar.module';
+import { provideEffects } from '@ngrx/effects';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideStore } from '@ngrx/store';
+import { registerLocaleData } from '@angular/common';
+import { routes } from './app.routes';
 
 // Registra os dados de localização para 'pt-BR'
 registerLocaleData(ptBr);
@@ -62,15 +64,17 @@ export const appConfig: ApplicationConfig = {
 		]),
 		// Configuração do estado global com reducer do NgRx
 		provideStore({
-			entidades: entidadesReducer, // Reducer responsável pelo gerenciamento de entidades
-			user: userReducer // Reducer responsável pelo gerenciamento de usuários
+			authData: authDataReducer, // Reducer responsável pelo gerenciamento de usuários
+			entidades: entidadesReducer // Reducer responsável pelo gerenciamento de entidades
 		}),
 		// Configuração de efeitos NgRx para ações assíncronas
 		provideEffects([
+			AuthDataEffects,
 			EntidadesEffects // Efeitos relacionados à funcionalidade de entidades
 		]),
 		// Importação de módulos específicos da aplicação
 		importProvidersFrom([
+			AuthModule,
 			EntidadesModule // Módulo para configurações locais de 'Entidades'
 		])
 	]
